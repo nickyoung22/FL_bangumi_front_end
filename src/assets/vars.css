@@ -1,0 +1,37 @@
+/* css变量 */
+
+:root {
+  /* 高度相关 */
+  /* --header-height: 2.8rem; */
+  --header-height: 66px;
+
+  /* 宽度相关 */
+  /* 右侧边栏宽度 */
+  --right-sider-width: 350px;
+  /* --right-sider-width: 10px; */
+
+  /* 字体相关 */
+  --search-font-size: 20px;
+  /* --router-link-firstRow-font-size: 18px; */
+  /* --router-link-secondRow-font-size: 15px; */
+  --body-font-size: 18px;
+
+  /* 颜色相关 */
+  --a-color: #cbcbcb;
+  --a-hover-color: #009dff;
+
+  --header-background-color: #0f0f0f;
+  --body-background-color: #1a1a1a;
+  --body-color-content: #d7d7d7;
+
+  --my-gray: #979797;
+  --my-gray2: #282828;
+  --my-light-white: #e9e9e9;
+  --active-list-item: #102e42;
+
+  --input-border-color: #242424;
+
+  --progress-bar-span-color: #d7d7d7;
+  --progress-bar-span-color-warn-bar: #f2975c;
+  --progress-bar-span-color-error-bar: #f56c6c;
+}

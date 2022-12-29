@@ -1,0 +1,71 @@
+@import './vars.css';
+@import './initialize.css';
+@import './myanime.css';
+@import './element-ui-modify.css';
+
+body {
+  background-color: var(--body-background-color);
+  color: var(--body-color-content);
+  margin-left: 2.8px;
+  margin-right: 2.8px;
+}
+
+.main > .left {
+  /* flex: 1; */
+  margin-right: calc(var(--right-sider-width) + 10px);
+}
+.main > .right {
+  position: fixed;
+  right: 2px;
+  background-color: var(--header-background-color);
+  top: var(--header-height);
+  display: none;
+  width: var(--right-sider-width);
+  padding-left: 2px;
+  /* border: 2px solid rgb(37, 237, 255); */
+  height: 85vh;
+
+  /* 侧边栏滚动 */
+  /* overflow: auto; */
+}
+
+@media (min-width: 400px) {
+  .main > .right {
+    display: block;
+  }
+}
+
+.filter-box {
+  border: 2px solid rgba(250, 128, 114, 0.747);
+  border-radius: 15px;
+  margin: 3px;
+}
+
+.slide-bar {
+  position: absolute;
+  top: 0;
+  left: -12px;
+  width: 15px;
+  height: 100%;
+  border-radius: 8px;
+  background-color: rgb(124, 1, 255);
+}
+
+.slide-bar:hover {
+  cursor: e-resize !important;
+  background-color: rgb(244, 42, 255);
+}
+
+.message-success {
+  background-color: #282828c6;
+}
+.message-success .el-message__icon {
+  color: #05a7ff;
+}
+.message-success .el-message__content {
+  color: #05a7ff;
+  font-size: 1.2em;
+}
+.message-error .el-message__content {
+  font-size: 1.2em;
+}

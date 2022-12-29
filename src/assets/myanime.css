@@ -1,0 +1,34 @@
+@keyframes mark-animated-border {
+  0% {
+    color: inherit;
+  }
+
+  100% {
+    color: rgb(233, 0, 254);
+  }
+}
+
+mark {
+  background-color: inherit;
+  animation: mark-animated-border 0.3s linear alternate-reverse infinite;
+}
+
+.hover-active {
+  transition: transform 0.2s !important;
+  cursor: pointer !important;
+}
+.hover-active:hover {
+  color: #20e5ff !important;
+  transform: translateY(-1.8px) scale(1.018) !important;
+  text-decoration: underline !important;
+}
+
+.click-active {
+  transition: transform 0.2s !important;
+  transition: color 0.1.5s !important;
+  cursor: pointer !important;
+}
+.click-active:active {
+  transform: scale(1.28) !important;
+  color: #ef0eff !important;
+}
