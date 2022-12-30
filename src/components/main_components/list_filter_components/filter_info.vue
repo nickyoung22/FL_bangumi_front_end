@@ -1,6 +1,6 @@
 <template>
   <div class="filter-box">
-    <h2 class="info">
+    <h2 class="info" v-if="store.list_data_filtered[type]">
       当前过滤后数据{{ store.list_data_filtered[type].length }}/{{ store.list_data[type].length }}
     </h2>
   </div>

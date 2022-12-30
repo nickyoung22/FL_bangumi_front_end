@@ -78,21 +78,8 @@ function modify_console_log() {
 
 
   // 一开始直接请求 所有数据
-  // 自动从路由信息中，得到所有种类资源的type数组
   ; (() => {
-
-    
-
-    let all_types_arr = []
-    router.options.routes.forEach(route => {
-      if (route.meta && route.meta.need_render_link) {
-        let children = route.children
-        children.forEach(route2 => {
-          all_types_arr.push(route2.meta.type)
-        })
-      }
-    })
-    store.get_list_data_ALL(all_types_arr, true)
+    store.init()
   })()
 
 
@@ -150,12 +137,9 @@ const full_screen = ref(false)
 <template>
   <Header v-if="!full_screen"></Header>
   <router-view class="container-wrapper" :class="{ 'full-screen': full_screen }" v-slot="{ Component }">
-
-    <keep-alive :exclude="[
-  'NotFoundPage_name_for_keep-alive_exclude',
-  'Add_Resources_detail_name_for_keep-alive_exclude',
-  'chnMangaReader'
-]">
+    <!-- 这里强制：相同路由 也不复用 -->
+    <keep-alive
+      :exclude="['NotFoundPage_name_for_keep-alive_exclude', 'Add_Resources_detail_name_for_keep-alive_exclude', 'chnMangaReader']">
       <component :is="Component" :key="$route.path" />
     </keep-alive>
 

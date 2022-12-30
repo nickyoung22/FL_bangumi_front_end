@@ -24,7 +24,9 @@ import Back from './header_components/back.vue'
 import Home from './header_components/Home.vue'
 
 export default {
-  setup() { },
+  setup() {
+
+  },
   components: {
     Logo,
     RouterLinks,

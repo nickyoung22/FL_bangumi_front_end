@@ -1,13 +1,11 @@
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import { useStore } from '@/stores/store.js'
 
+const main = () => import('@/components/main.vue')
 
-const main_2CY_anime = () => import('@/components/main_pages/main_2CY_anime.vue')
-const main_2CY_manga = () => import('@/components/main_pages/main_2CY_manga.vue')
-const main_3CY_movie = () => import('@/components/main_pages/main_3CY_movie.vue')
-const main_3CY_dance = () => import('@/components/main_pages/main_3CY_dance.vue')
-
+const RouteLoading = () => import('@/components/function_pages/RouteLoading.vue')
 const NotFound = () => import('@/components/function_pages/NotFound.vue')
+
 const Add_Resources_page = () => import('@/components/function_pages/Add_Resources_page.vue')
 const Add_Resources_detail = () => import('@/components/function_pages/Add_Resources_detail.vue')
 const System_Info_page = () => import('@/components/function_pages/System_Info_page.vue')
@@ -17,90 +15,85 @@ const chnMangaReader = () => import('@/components/function_pages/chnMangaReader.
 const routes = [
   {
     path: '/',
-    // redirect: '/2CY/anime'
+    redirect: { path: '/main' }
+  },
+
+  {
+    path: '/main',
     redirect: to => {
-      console.log('---------------------redirect--------------------')
+      console.log('---------------------redirect 1--------------------')
       console.log('from  ' + to.fullPath)
+
       const store = useStore()
       let history = store.temp_data.my_route_history
 
-      if (history) {
-        // 寻找最近的
-
-        console.log('to  ' + history[history.length - 1])
-        return { path: history[history.length - 1] }
+      if (!store.temp_data.routes) {
+        return {
+          name: 'RouteLoading',
+          query: {
+            path: to.fullPath
+          }
+        }
       }
 
-      console.log('默认 to  ' + '/2CY')
-      return { path: '/2CY' }
+      if (history) {
+        console.log('有history记录')
+
+        // 寻找最近的
+        console.log('to  ' + history[history.length - 1])
+        return { path: history[history.length - 1] }
+      } else {
+        console.log('无history记录')
+
+        // 默认子路由中第一个
+        console.log('默认 to  ' + '/main/' + store.temp_data.routes[0].code)
+        return { path: '/main/' + store.temp_data.routes[0].code }
+      }
+    }
+  },
+  {
+    path: '/main/:route1',
+    redirect: to => {
+      console.log('---------------------redirect 2--------------------')
+      console.log('from  ' + to.fullPath)
+
+      const store = useStore()
+      let history = store.temp_data.my_route_history
+
+      if (!store.temp_data.routes) {
+        // 通常到这里都已经有routes信息了，但不排除用户直接输入'/main/2CY'访问的情况
+        return {
+          name: 'RouteLoading',
+          query: {
+            path: to.fullPath
+          }
+        }
+      }
+
+      if (history) {
+        // 寻找最近的 以to.fullPath 为前缀的 若没有 则重定向到默认的
+        for (let i = history.length - 1; i >= 0; i--) {
+          if (history[i].startsWith(to.fullPath)) {
+            console.log('to  ' + history[i])
+            return { path: history[i] }
+          }
+        }
+      }
+
+      // 默认是 当前类别下，第一个子路由
+      for (let route of store.temp_data.routes) {
+        if (route.code === to.params.route1) {
+          console.log('to  ' + '/main/' + route.code + '/' + route.children[0].code)
+          return { path: '/main/' + route.code + '/' + route.children[0].code }
+        }
+      }
     }
   },
 
   {
-    path: '/2CY',
-    meta: { name: '2次元', need_render_link: true },
-    redirect: to => {
-      console.log('---------------------redirect--------------------')
-      console.log('from  ' + to.fullPath) // '/2C'
-
-      const store = useStore()
-      let history = store.temp_data.my_route_history
-
-      if (history) {
-        // 寻找最近的 以to.fullPath 为前缀的 若没有 则重定向到默认的
-        for (let i = history.length - 1; i >= 0; i--) {
-          if (history[i].startsWith(to.fullPath)) {
-            console.log('to  ' + history[i]) // '/2C'
-            return { path: history[i] }
-          }
-        }
-      }
-      console.log('默认 to  ' + '/2CY/anime') // '/2C'
-      return { path: '/2CY/anime' }
-    },
-    children: [
-      {
-        path: 'anime',
-        meta: { name: '动漫', type: '2CY_anime' },
-        component: main_2CY_anime
-      },
-      {
-        path: 'manga',
-        meta: {
-          name: '漫画',
-          type: '2CY_manga'
-        },
-        component: main_2CY_manga
-      }
-    ]
-  },
-
-  {
-    path: '/3CY',
-    meta: { name: '3次元', need_render_link: true },
-    redirect: to => {
-      console.log('---------------------redirect--------------------')
-      console.log('from  ' + to.fullPath) // '/3C'
-
-      const store = useStore()
-      let history = store.temp_data.my_route_history
-
-      if (history) {
-        // 寻找最近的 以to.fullPath 为前缀的 若没有 则重定向到默认的
-        for (let i = history.length - 1; i >= 0; i--) {
-          if (history[i].startsWith(to.fullPath)) {
-            console.log('to  ' + history[i]) // '/3C'
-            return { path: history[i] }
-          }
-        }
-      }
-      console.log('默认 to  ' + '/3CY/movie') // '/3C'
-      return { path: '/3CY/movie' }
-    },
-    children: [
-      { path: 'movie', meta: { name: '电影', type: '3CY_movie' }, component: main_3CY_movie },
-      { path: 'dance', meta: { name: '舞蹈', type: '3CY_dance' }, component: main_3CY_dance }
-    ]
+    path: '/main/:route1/:route2',
+    name: 'main_page',
+    component: main
   },
 
   {
@@ -136,11 +129,32 @@ const routes = [
       name: '漫画阅读器',
       full_screen: true
     },
-    component: chnMangaReader
+    component: chnMangaReader,
+    beforeEnter: (to, from) => {
+      const store = useStore()
+      if (!store.temp_data.manga_reading) {
+        router.back()
+      }
+    }
   },
 
   ///
-  { path: '/:errorMsg(.*)*', name: 'NotFound', component: NotFound }
+  {
+    path: '/route_loading',
+    name: 'RouteLoading',
+    meta: {
+      name: '等待加载路由'
+    },
+    component: RouteLoading
+  },
+  {
+    path: '/:errorMsg(.*)*',
+    name: 'NotFound',
+    meta: {
+      name: '未找到任何页面'
+    },
+    component: NotFound
+  }
 ]
 
 const router = createRouter({
@@ -148,19 +162,12 @@ const router = createRouter({
   // history: createWebHashHistory(),
   scrollBehavior(to, from, savedPosition) {
     console.log('--------------------scrollBehavior-------------------')
-    // console.log('to', to)
-    // console.log('from', from)
-    // console.log('savedPosition', savedPosition)
 
     // 修正滚动行为
     let my_scroll_to = position => {
       if (!position) return
       let timer = setInterval(() => {
         window.scrollTo(0, position.top)
-        // console.log(
-        //   `--------------  window.scrollTo(0, ${savedPosition.top}) ---------------------`
-        // )
-        // console.log(document.documentElement.scrollTop)
       }, 20)
       setTimeout(() => {
         clearInterval(timer)
@@ -188,44 +195,52 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   // console.log(`全局前置守卫:   from '${from.path}' to '${to.path}'`)
+  // console.log(from)
+  // console.log(to)
+
+  const store = useStore()
+
+  if (to.name !== 'RouteLoading' && !store.temp_data.routes) {
+    console.log('======全局前置钩子 拦截======')
+    return {
+      name: 'RouteLoading',
+      query: {
+        path: to.fullPath,
+        ...to.query
+      }
+    }
+  }
+
   return true
 })
 
 router.afterEach((to, from) => {
   console.log(`全局路由后置钩子: from '${from.path}' to '${to.path}'`)
-  // console.log(from)
-  // console.log(to)
 
-  // console.log(`当前组件路由：${to.fullPath}`)
-
-  // 跳转到特定的一些路由时，请求相应数据
-  // if (
-  //   // 第一次打开app的时候，不在此请求数据
-  //   from.path !== '/' &&
-  //   //  打开任意资源展示主页的时候。
-  //   to.meta.need_render_link === true
-  // ) {
-  //   let store = useStore()
-  //   let all_types_arr = []
-  //   router.options.routes.forEach(route => {
-  //     if (route.meta && route.meta.need_render_link) {
-  //       let children = route.children
-  //       children.forEach(route2 => {
-  //         all_types_arr.push(route2.meta.type)
-  //       })
-  //     }
-  //   })
-  //   console.log(`由路由导航触发的 请求数据：get_list_data_ALL()`)
-  //   store.get_list_data_ALL(all_types_arr, false)
-  // }
+  const store = useStore()
 
   // 更改网页title
-  document.title = to.meta.name + ' - ' + import.meta.env.VITE_APP_TITLE
+  if (to.meta.name) {
+    // 功能页面
+    document.title = to.meta.name + ' - ' + import.meta.env.VITE_APP_TITLE
+  } else if (to.name === 'main_page') {
+    // 主页面
+    let flag = false
+    for (let item1 of store.temp_data.routes) {
+      for (let item2 of item1.children) {
+        if (item2.code === to.params.route2) {
+          document.title = item2.name + ' - ' + import.meta.env.VITE_APP_TITLE
+          flag = true
+          break
+        }
+      }
+      if (flag) break
+    }
+  }
 
   // 记录访问过的路由 方便重定向到最近访问过的子路由
-  if (to.meta.need_render_link) {
-    // 只记录主页的路由
-    const store = useStore()
+  // 只记录主页的路由
+  if (to.name === 'main_page') {
     if (!store.temp_data.my_route_history) {
       store.temp_data.my_route_history = []
     }

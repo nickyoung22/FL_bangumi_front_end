@@ -1,4 +1,3 @@
-
 <template>
     <div class="container" ref="rootEle">
         <div class="chn-manga-reader" @selectstart.prevent>
@@ -12,32 +11,44 @@
             </div>
             <div class="main">
                 <div class="sider" :class="{ 'muti-mode': muti_mode }" ref="siderEle" v-show="show_sider">
-                    <template v-for=" (item, i) in store.temp_data.manga_reading_pics " :key="item">
-
+                    <template v-for="(item, i) in store.temp_data.manga_reading_pics" :key="item">
                         <div class="small-img-wrapper" :class="{ now: i === img_info.index_now }">
                             <img class="hover-active click-active" loading="lazy" @click="clickPrev(i)"
                                 draggable="false" :data-index="i" :src="
-                                store.api_server + '/static/' +
-                                store.temp_data.manga_reading.type + '/' +
-                                encodeURIComponent(store.temp_data.manga_reading.storeName + '/' + item)" />
+    store.api_server +
+    '/static/' +
+    store.temp_data.manga_reading.type +
+    '/' +
+    encodeURIComponent(store.temp_data.manga_reading.storeName + '/' + item)
+" />
                         </div>
-
                     </template>
                 </div>
                 <div class="img-wrapper" ref="mainEle">
-                    <img ref="imgEle" loading="lazy" @load="load_handle"
-                        :src="
-                        store.api_server + '/static/' +
-                        store.temp_data.manga_reading.type + '/' +
-                        encodeURIComponent(store.temp_data.manga_reading.storeName + '/' + store.temp_data.manga_reading_pics[img_info.index_now])" draggable="false" />
-                    <img v-if="double_page_mode && img_info.index_now < store.temp_data.manga_reading_pics.length - 1"
-                        ref="imgEle2" loading="lazy" @load="load_handle"
-                        :src="
-                        store.api_server + '/static/' +
-                        store.temp_data.manga_reading.type + '/' +
-                        encodeURIComponent(store.temp_data.manga_reading.storeName + '/' + store.temp_data.manga_reading_pics[img_info.index_now + 1])"
-                        draggable="false" />
-
+                    <img ref="imgEle" loading="lazy" @load="load_handle" :src="
+    store.api_server +
+    '/static/' +
+    store.temp_data.manga_reading.type +
+    '/' +
+    encodeURIComponent(
+        store.temp_data.manga_reading.storeName +
+        '/' +
+        store.temp_data.manga_reading_pics[img_info.index_now]
+    )
+" draggable="false" />
+                    <img v-if="
+    double_page_mode && img_info.index_now < store.temp_data.manga_reading_pics.length - 1
+" ref="imgEle2" loading="lazy" @load="load_handle" :src="
+    store.api_server +
+    '/static/' +
+    store.temp_data.manga_reading.type +
+    '/' +
+    encodeURIComponent(
+        store.temp_data.manga_reading.storeName +
+        '/' +
+        store.temp_data.manga_reading_pics[img_info.index_now + 1]
+    )
+" draggable="false" />
 
                     <div v-if="!muti_mode" class="previous" @click="previous">
                         <el-icon>
@@ -54,7 +65,6 @@
             <div class="footer"></div>
 
             <div class="menu" :class="{ unfolding: menu_show }" @mouseover="Show" @mouseleave="offShow">
-
                 <el-icon class="icon" :class="{ 'unfolding-icon': menu_show }">
                     <ArrowDown />
                 </el-icon>
@@ -63,43 +73,49 @@
                         <span class="hover-active click-active" :class="{ active: show_header }" @click="header_toggle">
                             标题栏
                         </span>
-                        <hr>
-                        <span class="hover-active click-active" :class="{ active: (show_sider && !muti_mode) }"
+                        <hr />
+                        <span class="hover-active click-active" :class="{ active: show_sider && !muti_mode }"
                             @click="sider_toggle">
                             侧边栏
                         </span>
-                        <hr>
+                        <hr />
                         <span class="hover-active click-active" :class="{ active: muti_mode }"
                             @click="muti_mode_toggle">
                             多图预览
                         </span>
-                        <hr>
-                        <hr>
+                        <hr />
+                        <hr />
                         <span v-if="!muti_mode" class="hover-active click-active" @click="open_in_local">
                             本地打开
                         </span>
-                        <hr>
+                        <hr />
                         <span v-if="!muti_mode" class="hover-active click-active" :class="{ active: double_page_mode }"
                             @click="double_page_mode_toggle">
                             双页模式
                         </span>
                     </div>
                 </Transition>
-
             </div>
         </div>
     </div>
-</template> 
+</template>
 
 <script setup>
-import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick, getCurrentInstance } from 'vue'
+import {
+    ref,
+    reactive,
+    computed,
+    watch,
+    onMounted,
+    onUnmounted,
+    nextTick,
+    getCurrentInstance
+} from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '@/stores/store.js'
 import _throttle from '@/utils/_throttle.js'
 const store = useStore()
 const { proxy } = getCurrentInstance()
-
-
 
 // 获取一些元素dom
 const rootEle = ref(null)
@@ -114,12 +130,11 @@ const img_info = reactive({
 
 // 前一页、下一页 点击事件
 //键盘快捷键
-const handle_keyup = (e) => {
+const handle_keyup = e => {
     if (!muti_mode.value) {
         if (e.keyCode === 37) {
             previous()
-        }
-        else if (e.keyCode === 39) {
+        } else if (e.keyCode === 39) {
             next()
         }
     }
@@ -158,7 +173,6 @@ const next = () => {
     sider_navigate()
 }
 
-
 // 图片 缩放功能 与 拖拽移动功能
 /**
  * 元素缩放、拖拽
@@ -172,7 +186,7 @@ const next = () => {
  * @param {number} [option.disabledDrag = false] 是否禁用拖拽，默认 否
  * @param {number} [option.slopOverParent = true] 是否可以超出父容器边界，默认 是
  * @param {number} [option.DoubleClick_init = true] 是否双击复原
- * 
+ *
  */
 function IMG_enhance_zoom_drag(imgEle, option = {}) {
     console.log('------------- init (first time) -------------', imgEle)
@@ -248,10 +262,10 @@ function IMG_enhance_zoom_drag(imgEle, option = {}) {
     // 拖拽移动事件
     if (!disabledDrag) {
         let x0, // 记录鼠标按下时的 x 坐标
-            y0// 记录鼠标按下时的 y 坐标
+            y0 // 记录鼠标按下时的 y 坐标
         let Trans_x = prevTranslate.x, // 最后设置的 translateX 值
-            Trans_y = prevTranslate.y// 最后设置的 translateY 值
-        const mousedown = (ev) => {
+            Trans_y = prevTranslate.y // 最后设置的 translateY 值
+        const mousedown = ev => {
             x0 = ev.x
             y0 = ev.y
             const clientRect = imgEle.getBoundingClientRect()
@@ -263,7 +277,7 @@ function IMG_enhance_zoom_drag(imgEle, option = {}) {
             // 鼠标松开
             document.addEventListener('mouseup', mouseup)
         }
-        const mousemove = (ev) => {
+        const mousemove = ev => {
             firstMoveFlag = true
             Trans_y = prevTranslate.y + (ev.y - y0)
             Trans_x = prevTranslate.x + (ev.x - x0)
@@ -316,7 +330,6 @@ function IMG_enhance_zoom_drag(imgEle, option = {}) {
                 disabledDrag = false,
                 DoubleClick_init = true
             } = option)
-
     }
 
     // 是否双击复原
@@ -328,7 +341,6 @@ function IMG_enhance_zoom_drag(imgEle, option = {}) {
 
     // 返回初始化函数
     return init
-
 }
 
 let first_load = true
@@ -359,7 +371,6 @@ const offShow = () => {
     }
 }
 
-
 // 是否显示header
 const show_header = ref(true)
 const header_toggle = () => {
@@ -376,8 +387,7 @@ const sider_toggle = () => {
     if (muti_mode.value) {
         muti_mode.value = false
         show_sider.value = true
-    }
-    else {
+    } else {
         show_sider.value = !show_sider.value
     }
     sider_navigate()
@@ -418,8 +428,8 @@ const muti_mode_toggle = () => {
         }
     })
 }
-const clickPrev = (i) => {
-    img_info.index_now = i;
+const clickPrev = i => {
+    img_info.index_now = i
     if (muti_mode.value) {
         muti_mode.value = false
         show_sider.value = false
@@ -436,7 +446,13 @@ const clickPrev = (i) => {
 const open_in_local = () => {
     proxy.$axios.get(`${store.api_server}/open/${store.temp_data.manga_reading.type}`, {
         params: {
-            path: JSON.stringify((store.temp_data.manga_reading.storeName + '\\' + store.temp_data.manga_reading_pics[img_info.index_now]).split('\\'))
+            path: JSON.stringify(
+                (
+                    store.temp_data.manga_reading.storeName +
+                    '\\' +
+                    store.temp_data.manga_reading_pics[img_info.index_now]
+                ).split('\\')
+            )
         }
     })
 }
@@ -452,10 +468,9 @@ const double_page_mode_toggle = () => {
         }
     })
 }
-const img_width = computed(() => {
+omputed(() => {
     return double_page_mode.value ? '50%' : '100%'
 })
-
 </script>
 
 <style lang="less" scoped>
@@ -491,8 +506,6 @@ const img_width = computed(() => {
 
                 white-space: nowrap;
             }
-
-
         }
 
         .main {
@@ -511,7 +524,6 @@ const img_width = computed(() => {
                 }
 
                 &.muti-mode {
-
                     width: 100%;
 
                     .small-img-wrapper {
@@ -525,10 +537,7 @@ const img_width = computed(() => {
                             height: 100%;
                             width: auto;
                         }
-
-
                     }
-
                 }
 
                 .small-img-wrapper {
@@ -549,12 +558,7 @@ const img_width = computed(() => {
                     img {
                         width: 95%;
                     }
-
-
                 }
-
-
-
             }
 
             .img-wrapper {
@@ -609,9 +613,7 @@ const img_width = computed(() => {
                 .next {
                     right: 0px;
                 }
-
             }
-
         }
 
         // .footer {}
@@ -649,7 +651,6 @@ const img_width = computed(() => {
                     color: var(--my-gray);
                     display: block;
                     height: calc((var(--header-height) - 4px) * 95%);
-
                 }
 
                 svg {
@@ -671,13 +672,10 @@ const img_width = computed(() => {
                         font-size: 28px;
                     }
                 }
-
             }
         }
     }
 }
-
-
 
 // .footer {}
 </style>

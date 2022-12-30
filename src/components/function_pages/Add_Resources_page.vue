@@ -4,13 +4,13 @@
       <el-menu active-text-color="var(--active-color)" text-color="var(--text-color)" background-color="var(--bg-color)"
         @select="handle_select" :default-openeds="default_openeds">
         <template v-for="item1 in routes">
-          <el-sub-menu :index="item1.path">
+          <el-sub-menu :index="item1.code">
             <template #title>
-              <span>{{ item1.meta.name }}</span>
+              <span>{{ item1.name }}</span>
             </template>
 
-            <el-menu-item v-for="item2 in item1.children" :index="item2.meta.type">
-              {{ item2.meta.name }}
+            <el-menu-item v-for="item2 in item1.children" :index="item2.code">
+              {{ item2.name }}
             </el-menu-item>
           </el-sub-menu>
         </template>
@@ -22,12 +22,8 @@
       <ul class="ul-container">
         <li v-for="item in render_data" :key="type_now + item.path">
           <a class="hover-active click-active" @click="handle_click(item)">
-            <File_icon class="icon hover-active" v-bind="{
-              fileName: item.name,
-              url_exact: true,
-              type_appoint: item.isFolder ? 'folder' : 'file',
-              tooltip_disabled: true
-            }">
+            <File_icon class="icon hover-active"
+              v-bind="{ fileName: item.name, url_exact: true, type_appoint: item.isFolder ? 'folder' : 'file', tooltip_disabled: true }">
             </File_icon>
             <span> {{ item.name }}</span>
             <span class="inner-num">{{ item.innerNum }}</span>
@@ -60,7 +56,8 @@ export default {
   data() {
     return {
       ComponentName: 'Add_Resources_page.vue',
-      routes: this.$router.options.routes.filter(e => e.meta && e.meta.need_render_link === true),
+
+      routes: this.store.temp_data.routes,
 
       type_now: '',
       path_now: [],
@@ -70,13 +67,10 @@ export default {
   },
   computed: {
     default_openeds() {
-      return this.routes.map(e => e.path)
+      return this.routes.map(e => e.code)
     }
   },
 
-  watch: {
-  }
-  ,
   methods: {
     handle_select(type) {
       this.type_now = type
@@ -84,7 +78,7 @@ export default {
         name: 'Add_Resources_page',
         query: {
           type: this.type_now,
-          path: '/'
+          storePath: '/'
         }
       })
     },
@@ -101,7 +95,7 @@ export default {
           name: 'Add_Resources_page',
           query: {
             type: this.type_now,
-            path: this.pathArr_2_pathStr(this.path_now)
+            storePath: this.pathArr_2_pathStr(this.path_now)
           }
         })
 
@@ -140,13 +134,13 @@ export default {
     this.$watch(
       () => this.$route.query,
       () => {
-        if (!this.$route.query.path) {
+        if (!this.$route.query.storePath) {
           return
         }
 
         // 对路由变化做出响应...
         this.type_now = this.$route.query.type
-        this.path_now = this.pathStr_2_pathArr(this.$route.query.path)
+        this.path_now = this.pathStr_2_pathArr(this.$route.query.storePath)
 
         // 依据此时的 type 和 path ，请求文件夹数据
         this.$axios.get(`${this.store.api_server}/list_to_add/${this.type_now}`, {

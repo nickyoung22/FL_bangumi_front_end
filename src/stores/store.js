@@ -5,10 +5,13 @@ import { defineStore } from 'pinia'
 import axios from '../utils/axios'
 import order from '../utils/order'
 import router from '@/router/router.js'
+
 export const useStore = defineStore('store', {
   state: () => ({
     api_server: 'http://localhost:8023/fl_bangumi',
     // api_server: 'http://192.168.31.58:8023/fl_bangumi',
+
+    system_info: {},
 
     list_data: {},
     list_data_filtered: {},
@@ -23,6 +26,42 @@ export const useStore = defineStore('store', {
     temp_data: {}
   }),
   actions: {
+    async init() {
+      // 请求后端设置信息，得到所有种类资源的type数组
+
+      let system_info = await this.get_system_info()
+
+      // console.log(Object.keys(res.resources_INFO))
+      await this.get_list_data_ALL(Object.keys(system_info.resources_INFO), true)
+    },
+
+    async get_system_info() {
+      let system_info = await axios.get(this.api_server + '/system_info/get')
+      this.system_info = system_info
+
+      // 得到系统信息，并从中提取出路由信息
+      let type_map = new Map()
+      for (let type of Object.keys(this.system_info.resources_INFO)) {
+        let type_obj = this.system_info.resources_INFO[type]
+
+        if (type_map.has(type_obj.belong_to.code)) {
+          type_map.get(type_obj.belong_to.code).push({ code: type, ...type_obj })
+        } else {
+          type_map.set(type_obj.belong_to.code, [{ code: type, ...type_obj }])
+        }
+      }
+
+      this.temp_data.routes = [...type_map].map(e => {
+        return {
+          code: e[0],
+          name: e[1][0].belong_to.name,
+          children: e[1]
+        }
+      })
+
+      return system_info
+    },
+
     async get_list_data(type, first_get) {
       console.log('[get_list_data]' + ' started:  ' + `[${type}]`)
 

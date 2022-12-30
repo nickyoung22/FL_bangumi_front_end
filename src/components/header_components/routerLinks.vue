@@ -3,35 +3,42 @@
     <div class="routerLinks-wrapper">
       <div class="firstRow-wrapper">
         <div class="firstRow">
-          <template v-if="$route.name === 'NotFound'"></template>
-          <template v-else-if="could_match">
-            <template v-for="item1 in routes">
-              <router-link active-class="active-router-link" :to="item1.path">
-                {{ item1.meta.name }}
+
+          <template v-if="$route.name === 'main_page'">
+
+            <template v-for="route1 in routes">
+              <router-link :class="{ 'active-router-link': routeNow.startsWith('/main/' + route1.code) }"
+                :to="'/main/' + route1.code">
+                {{ route1.name }}
               </router-link>
             </template>
+
           </template>
-          <template v-else>功能界面</template>
+
         </div>
       </div>
 
       <div class="secondRow-wrapper">
         <div class="secondRow">
-          <template v-if="$route.name === 'NotFound'"></template>
-          <template v-else-if="could_match">
-            <template v-for="item1 in routes">
-              <template v-if="routeNow.startsWith(item1.path)">
-                <router-link v-for="item2 in item1.children" active-class="active-router-link"
-                  :to="item1.path + '/' + item2.path">
-                  {{ item2.meta.name }}
+
+          <template v-if="$route.name === 'main_page'">
+
+            <template v-for="route1 in routes">
+              <template v-if="routeNow.startsWith('/main/' + route1.code)">
+                <router-link v-for="route2 in route1.children" active-class="active-router-link"
+                  :to="'/main/' + route1.code + '/' + route2.code">
+                  {{ route2.name }}
                 </router-link>
               </template>
             </template>
+
           </template>
+
           <template v-else>
             {{ $route.meta.name }}
             {{ $route.params.operation ? ' -> 操作：' + ($route.params.operation === 'add' ? '添加' : '修改') : '' }}
           </template>
+
         </div>
       </div>
     </div>
@@ -39,36 +46,44 @@
 </template>
 
 <script>
+
+import { useStore } from '@/stores/store.js'
+
 export default {
-  setup() { },
+
+  setup() {
+    const store = useStore()
+    return { store }
+  },
   components: {},
   data() {
     return {
       ComponentName: 'header.vue  routerLinks.vue',
-      routes: this.$router.options.routes.filter(e => e.meta && e.meta.need_render_link === true)
     }
   },
   computed: {
+    routes() {
+      return this.store.temp_data.routes
+    },
+
     routeNow() {
       return this.$route.path
     },
 
-    could_match() {
-      let flag = false
-      for (let r of this.routes) {
-        if (this.routeNow.startsWith(r.path)) flag = true
-      }
-
-      return flag
+    is_main_page() {
+      return true
     }
+
   },
 
-  methods: {},
+  methods: {
+  },
 
   created() {
-    // console.log(this.$router.options.routes)
   },
-  mounted() { }
+  mounted() {
+  }
+
 }
 </script>
 
