@@ -1,4 +1,6 @@
 export default function (arr, type) {
+  if (!arr.length) return arr
+
   // 针对有 date项的资源，目前是 2CY_manga
   // 正序 就是按 date 从早到晚
   // 倒序 就是按 date 从晚到早

@@ -138,8 +138,13 @@ const full_screen = ref(false)
   <Header v-if="!full_screen"></Header>
   <router-view class="container-wrapper" :class="{ 'full-screen': full_screen }" v-slot="{ Component }">
     <!-- 这里强制：相同路由 也不复用 -->
-    <keep-alive
-      :exclude="['NotFoundPage_name_for_keep-alive_exclude', 'Add_Resources_detail_name_for_keep-alive_exclude', 'chnMangaReader']">
+    <keep-alive :exclude="
+  [
+    'NotFoundPage_name_for_keep-alive_exclude',
+    'Add_Resources_detail_name_for_keep-alive_exclude',
+    'chnMangaReader',
+    'RouteLoading_name_for_keep-alive_exclude'
+  ]">
       <component :is="Component" :key="$route.path" />
     </keep-alive>
 

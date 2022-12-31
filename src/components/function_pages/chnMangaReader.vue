@@ -116,7 +116,6 @@ import { useStore } from '@/stores/store.js'
 import _throttle from '@/utils/_throttle.js'
 const store = useStore()
 const { proxy } = getCurrentInstance()
-
 // 获取一些元素dom
 const rootEle = ref(null)
 const imgEle = ref(null)
@@ -468,7 +467,7 @@ const double_page_mode_toggle = () => {
         }
     })
 }
-omputed(() => {
+const img_width = computed(() => {
     return double_page_mode.value ? '50%' : '100%'
 })
 </script>

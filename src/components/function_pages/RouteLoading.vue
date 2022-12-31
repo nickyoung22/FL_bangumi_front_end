@@ -8,6 +8,8 @@
 import { useStore } from '@/stores/store.js'
 
 export default {
+    name: 'RouteLoading_name_for_keep-alive_exclude',
+
     setup() {
         const store = useStore()
         return { store }
@@ -27,7 +29,6 @@ export default {
         }
 
         if (this.store.temp_data.routes) {
-            // 默认子路由中第一个
             goback()
         } else {
             this.store.get_system_info().then(() => {

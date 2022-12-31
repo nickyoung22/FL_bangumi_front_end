@@ -46,8 +46,21 @@ const routes = [
         console.log('无history记录')
 
         // 默认子路由中第一个
-        console.log('默认 to  ' + '/main/' + store.temp_data.routes[0].code)
-        return { path: '/main/' + store.temp_data.routes[0].code }
+        if (store.temp_data.routes.length === 0) {
+          let message = '还没有添加任何资源，快去添加一种资源吧！'
+          console.log(message)
+          ElMessage({
+            message: `${message}！！`,
+            ['custom-class']: 'message-success',
+            type: 'success',
+            duration: 0,
+            showClose: true
+          })
+          return { name: 'System_Info_page' }
+        } else {
+          console.log('默认 to  ' + '/main/' + store.temp_data.routes[0].code)
+          return { path: '/main/' + store.temp_data.routes[0].code }
+        }
       }
     }
   },
