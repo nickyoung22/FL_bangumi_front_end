@@ -184,15 +184,13 @@ export const useStore = defineStore('store', {
       window.scrollTo(0, 0)
 
       let types = []
+
       if (!type) {
-        router.options.routes.forEach(route => {
-          if (route.meta && route.meta.need_render_link) {
-            let children = route.children
-            children.forEach(route2 => {
-              types.push(route2.meta.type)
-            })
+        for (let route1 of this.temp_data.routes) {
+          for (let route2 of route1.children) {
+            types.push(route2.code)
           }
-        })
+        }
       } else {
         types = [type]
       }
