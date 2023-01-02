@@ -65,7 +65,7 @@ export default {
         return {
             ComponentName: 'main.vue',
 
-            item_component_name: 'loading',
+            item_component_name: 'loading_item_component',
 
             type: '',
             type_showName: '',

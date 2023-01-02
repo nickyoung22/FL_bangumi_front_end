@@ -59,17 +59,18 @@ function modify_console_log() {
     ElNotification({
       type: 'error',
       title: 'WebSocket  连接错误',
-      message: '请检查后端服务器是否在正常运行',
+      dangerouslyUseHTMLString: true,
+      message: '请检查后端服务器是否在正常运行   <button onclick="location.reload(true)">刷新</button>',
       duration: 0,
     })
   };
   ws.onclose = (e) => {
-
     console.log(`WebSocket  连接断开`, e)
     ElNotification({
       type: 'error',
       title: 'WebSocket  连接断开',
-      message: '请检查后端服务器是否在正常运行',
+      dangerouslyUseHTMLString: true,
+      message: '请检查后端服务器是否在正常运行   <button onclick="location.reload(true)">刷新</button>',
       duration: 0,
     })
 

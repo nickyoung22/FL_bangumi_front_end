@@ -1,16 +1,9 @@
-@keyframes mark-animated-border {
-  0% {
-    color: inherit;
-  }
-
-  100% {
-    color: rgb(233, 0, 254);
-  }
-}
-
 mark {
-  background-color: inherit;
-  animation: mark-animated-border 0.3s linear alternate-reverse infinite;
+  background-color: inherit !important;
+  font-weight: 600 !important;
+  color: inherit !important;
+
+  border-bottom: 1.8px solid #ff9900 !important;
 }
 
 .hover-active {
