@@ -39,9 +39,7 @@
                   '/static/' +
                   list_item_data.type +
                   '/' +
-                  list_item_data.storeName +
-                  '/hots/' +
-                  encodeURIComponent(hot_item)
+                  encodeURIComponent(list_item_data.storeName + '/hots/' + hot_item)
                 " />
               您的浏览器不支持 video 标签。
             </video>
@@ -57,17 +55,60 @@
                 '/static/' +
                 list_item_data.type +
                 '/' +
-                list_item_data.storeName +
-                '/hots/' +
-                encodeURIComponent(hot_item)
+                encodeURIComponent(list_item_data.storeName + '/hots/' + hot_item)
               " />
+          </template>
+        </template>
+        <!-- youtube bilibili内嵌视频 -->
+        <template v-for="file in list_item_data.file_names">
+          <template
+            v-if="
+              file.type === 'file' &&
+              /.url$/.test(file.name) &&
+              (/youtube\.com/.test(file.content) || /bilibili\.com/.test(file.content))
+            ">
+            <template v-if="/youtube\.com/.test(file.content)">
+              <div class="embed-video-box">
+                <iframe
+                  :src="`https://www.youtube.com/embed/${file.content.match(/watch\?v=(\w+)/)[1]}`"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen></iframe>
+              </div>
+            </template>
+
+            <!-- b站内嵌代码不能调节音量等 故不用 -->
+            <!-- <template v-if="/bilibili\.com/.test(file.content)">
+              <div class="embed-video-box">
+                <iframe
+                  :src="`//player.bilibili.com/player.html?bvid=${
+                    file.content.match(/video\/(BV\w+)/)[1]
+                  }&danmaku=0`"
+                  scrolling="no"
+                  border="0"
+                  frameborder="no"
+                  framespacing="0"
+                  allowfullscreen="true"></iframe>
+              </div>
+            </template> -->
           </template>
         </template>
       </div>
       <div class="info-box">
         <div class="filenames-box-wrapper clearfix">
           <div class="filenames-box float-right">
-            <!-- 文件不展示 -->
+            <!-- 展示除了 .vmd .wav 的文件 -->
+            <template v-for="file in list_item_data.file_names">
+              <div v-if="!(/\.vmd$/.test(file.name) || /\.wav$/.test(file.name))">
+                <File_icon
+                  @click="open(list_item_data.type, list_item_data.storeName, file.name)"
+                  class="file-names click-active hover-active"
+                  v-bind="{
+                    file_obj: file
+                  }"></File_icon>
+              </div>
+            </template>
+
             <File_icon
               class="file-names last click-active hover-active"
               @click="open(list_item_data.type, list_item_data.storeName)"
@@ -161,13 +202,25 @@
         img,
         video {
           display: inline-block;
-          height: 220px;
+          height: 260px;
           vertical-align: top;
           margin-left: 5px;
           border: 1px solid #25edff82;
 
           &:hover {
             cursor: pointer;
+          }
+        }
+
+        .embed-video-box {
+          display: inline-block;
+          height: 260px;
+          width: 452px;
+          margin-left: 5px;
+          border: 1px solid #25edff82;
+          iframe {
+            width: 100%;
+            height: 100%;
           }
         }
       }

@@ -53,7 +53,7 @@
                   '/static/' +
                   list_item_data.type +
                   '/' +
-                  encodeURIComponent(list_item_data.storeName + '/' + hot_item)
+                  encodeURIComponent(list_item_data.storeName + '/hots/' + hot_item)
                 " />
               您的浏览器不支持 video 标签。
             </video>
