@@ -1,3 +1,5 @@
+console.log('----> vue 的第一行代码')
+
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
@@ -38,4 +40,5 @@ app.use(pinia) // 使用 pinia 全局状态管理
 
 app.use(router) // 使用 vue router@4
 
+console.log(`---------- app.mount('#app')`)
 app.mount('#app')
