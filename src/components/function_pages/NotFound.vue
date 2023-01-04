@@ -14,40 +14,40 @@
 </template>
 
 <script>
-export default {
-  name: 'NotFoundPage_name_for_keep-alive_exclude',
-  data() {
-    return {
-      ComponentName: 'NotFound.vue',
-      sorry: '抱歉!',
-      title1: '当前页面不存在...',
-      title2: '请检查您输入的网址是否正确，或点击下面的按钮返回首页。',
-      buttonText: '返回首页',
-      timer: null,
-      timeLeft: 1000
-    }
-  },
+  export default {
+    name: 'NotFoundPage_name_for_keep-alive_exclude',
+    data() {
+      return {
+        ComponentName: 'NotFound.vue',
+        sorry: '抱歉!',
+        title1: '当前页面不存在...',
+        title2: '请检查您输入的网址是否正确，或点击下面的按钮返回首页。',
+        buttonText: '返回首页',
+        timer: null,
+        timeLeft: 1000
+      }
+    },
 
-  methods: {
-    goHome() {
-      this.$router.push('/')
-    }
-  },
-  created() {
-    this.timer = setInterval(() => {
-      this.timeLeft -= 1
-
-      if (this.timeLeft === 0) {
+    methods: {
+      goHome() {
         this.$router.push('/')
       }
-    }, 1000)
+    },
+    created() {
+      this.timer = setInterval(() => {
+        this.timeLeft -= 1
+
+        if (this.timeLeft === 0) {
+          this.$router.push('/')
+        }
+      }, 1000)
+    }
   }
-}
 </script>
 
 <style scoped lang="less">
-.not-found-page {
-  width: 66vw;
-  margin: 0 auto;
-}
+  .not-found-page {
+    width: 66vw;
+    margin: 0 auto;
+  }
 </style>

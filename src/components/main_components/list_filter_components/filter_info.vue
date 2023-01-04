@@ -7,29 +7,29 @@
 </template>
 
 <script>
-import { useStore } from '@/stores/store.js'
-export default {
-  setup() {
-    const store = useStore()
-    return { store }
-  },
-  props: ['type'],
-  data() {
-    return {
-      ComponentName: 'filter_info.vue'
-    }
-  },
+  import { useStore } from '@/stores/store.js'
+  export default {
+    setup() {
+      const store = useStore()
+      return { store }
+    },
+    props: ['type'],
+    data() {
+      return {
+        ComponentName: 'filter_info.vue'
+      }
+    },
 
-  methods: {},
+    methods: {},
 
-  created() { }
-}
+    created() {}
+  }
 </script>
 
 <style scoped lang="less">
-.info {
-  font-size: calc(var(--body-font-size) * 1.2);
-  color: aqua;
-  border-bottom: 2px dashed orange;
-}
+  .info {
+    font-size: calc(var(--body-font-size) * 1.2);
+    color: aqua;
+    border-bottom: 2px dashed orange;
+  }
 </style>
