@@ -21,22 +21,21 @@
     </div>
 
     <div class="right">
-      <!-- <el-progress v-show="isLoading" :percentage="100" :indeterminate="true" :show-text="false" :duration=".8" /> -->
       <ul class="ul-container">
         <li v-for="item in render_data" :key="type_now + item.path">
           <a class="hover-active click-active" @click="handle_click(item)">
             <File_icon
               class="icon hover-active"
               v-bind="{
-                fileName: item.name,
-                url_exact: true,
-                type_appoint: item.isFolder ? 'folder' : 'file',
-                tooltip_disabled: true
+                file_obj: item,
+                option: {
+                  tooltip_disabled: true
+                }
               }"></File_icon>
             <span>{{ item.name }}</span>
             <span class="inner-num">{{ item.innerNum }}</span>
           </a>
-          <div v-if="item.isFolder" class="buttons">
+          <div v-if="item.type === 'folder'" class="buttons">
             <el-button
               type="primary"
               @click="add(type_now, item.path)"
@@ -96,12 +95,7 @@
       },
       handle_click(item) {
         // 如果点击的是文件夹，就导航到 文件夹下目录
-        if (item.isFolder) {
-          let time_now = +new Date()
-          while (true) {
-            if (+new Date() - time_now > 1000) break
-          }
-
+        if (item.type === 'folder') {
           this.path_now.push(item.name)
           this.$router.push({
             name: 'Add_Resources_page',

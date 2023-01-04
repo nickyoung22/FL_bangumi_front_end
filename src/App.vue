@@ -56,7 +56,7 @@
         title: 'WebSocket  连接错误',
         dangerouslyUseHTMLString: true,
         message:
-          '请检查后端服务器是否在正常运行   <button onclick="location.reload(true)">刷新</button>',
+          '请检查后端服务器是否在正常运行   <hr> 尝试<button onclick="location.reload(true)">刷新</button>',
         duration: 0
       })
     }
@@ -67,7 +67,7 @@
         title: 'WebSocket  连接断开',
         dangerouslyUseHTMLString: true,
         message:
-          '请检查后端服务器是否在正常运行   <button onclick="location.reload(true)">刷新</button>',
+          '请检查后端服务器是否在正常运行   <hr> 尝试<button onclick="location.reload(true)">刷新</button>',
         duration: 0
       })
     }

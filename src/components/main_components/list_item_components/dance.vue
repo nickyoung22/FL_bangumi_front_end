@@ -14,7 +14,9 @@
         </span>
       </template>
 
-      <span class="dancer float-right">{{ list_item_data.dancer.join(' -- ') }}</span>
+      <span class="dancer dancer_highlight float-right">
+        {{ list_item_data.dancer.join(' -- ') }}
+      </span>
     </div>
     <div class="tags-box tags_highlight">
       {{ list_item_data.tags.join(' ') }}
@@ -66,13 +68,14 @@
         <div class="filenames-box-wrapper clearfix">
           <div class="filenames-box float-right">
             <!-- 文件不展示 -->
-
             <File_icon
               class="file-names last click-active hover-active"
               @click="open(list_item_data.type, list_item_data.storeName)"
               v-bind="{
-                fileName: list_item_data.storeName,
-                type_appoint: 'folder'
+                file_obj: {
+                  name: '打开所在文件夹',
+                  type: 'folder'
+                }
               }"></File_icon>
           </div>
         </div>

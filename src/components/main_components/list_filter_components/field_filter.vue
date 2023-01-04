@@ -2,6 +2,15 @@
   <div class="filter-box">
     <h3 class="title clearfix" @click="show = !show">
       <span class="float-left">{{ field_showName }}选择器 in {{ type_showName }}</span>
+      <File_icon
+        class="float-left click-active hover-active"
+        @click.capture.stop="open(type, `##${field_showName}`)"
+        v-bind="{
+          file_obj: {
+            name: `打开${field_showName}文件夹`,
+            type: 'folder'
+          }
+        }"></File_icon>
 
       <span class="float-right" v-if="show">↓</span>
       <span class="float-right" v-else>↑</span>
@@ -42,23 +51,22 @@
                     store.api_server +
                     '/static/' +
                     type +
-                    `/${encodeURIComponent(`##${field}`)}/` +
-                    item.storeName +
-                    '/cover.jpg'
+                    '/' +
+                    encodeURIComponent(`##${field_showName}/` + item.storeName + '/cover.jpg')
                   " />
                 <div class="icons-box float-left">
                   <template v-for="file in item.file_names">
                     <File_icon
                       class="hover-active click-active"
-                      @click="open(type, `##${field}`, item.storeName, file)"
-                      :fileName="file"></File_icon>
+                      @click="open(type, `##${field_showName}`, item.storeName, file.name)"
+                      :file_obj="file"></File_icon>
                   </template>
                 </div>
               </div>
               <div class="bottom clearfix">
                 <el-tooltip
                   effect="dark"
-                  :content="item.name.join('-')"
+                  :content="item.name.join('，')"
                   placement="left-end"
                   :hide-after="0">
                   <span
@@ -75,11 +83,10 @@
                 <span class="folder float-right">
                   <File_icon
                     class="hover-active click-active"
-                    @click="open(type, `##${field}`, item.storeName)"
-                    v-bind="{
-                      fileName: '',
-                      type_appoint: 'folder',
-                      tooltip_disabled: true
+                    @click="open(type, `##${field_showName}`, item.storeName)"
+                    :file_obj="{
+                      name: '打开所在文件夹',
+                      type: 'folder'
                     }"></File_icon>
                 </span>
               </div>
@@ -134,8 +141,6 @@
 
     methods: {
       open(type, ...path_arr) {
-        console.log(path_arr)
-
         this.$axios.get(`${this.store.api_server}/open/${type}`, {
           params: {
             path: JSON.stringify(path_arr)
@@ -312,6 +317,12 @@
       &:hover {
         cursor: pointer;
         background-color: var(--active-list-item);
+      }
+
+      :deep(img) {
+        margin-left: 20px;
+        height: 25px;
+        width: 25px;
       }
 
       svg {

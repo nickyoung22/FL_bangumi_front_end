@@ -11,6 +11,10 @@
           (别名： {{ list_item_data.other_name.join(' , ') }})
         </span>
       </template>
+
+      <span v-if="list_item_data.actress" class="actress actress_highlight float-right">
+        {{ list_item_data.actress.join(' -- ') }}
+      </span>
     </div>
     <div class="tags-box tags_highlight">
       {{ list_item_data.tags.join(' ') }}
@@ -27,8 +31,6 @@
             encodeURIComponent(list_item_data.storeName + '/cover.jpg')
           "
           @error="handle_cover_img_error" />
-        <!-- <img v-bind:src="store.api_server + '/static/' + type + '/' + list_item_data.storeName + '/cover.jpeg'" />
-        <img v-bind:src="store.api_server + '/static/' + type + '/' + list_item_data.storeName + '/cover.png'" /> -->
 
         <template v-for="hot_item in list_item_data.hots">
           <template
@@ -72,12 +74,10 @@
           <div class="filenames-box float-right">
             <template v-for="file in list_item_data.file_names">
               <File_icon
-                @click="open(list_item_data.type, list_item_data.storeName, file)"
+                @click="open(list_item_data.type, list_item_data.storeName, file.name)"
                 class="file-names click-active hover-active"
-                :fileName="file"
                 v-bind="{
-                  url_exact: true,
-                  tooltip_direction: 'left-end'
+                  file_obj: file
                 }"></File_icon>
             </template>
 
@@ -85,8 +85,10 @@
               class="file-names last click-active hover-active"
               @click="open(list_item_data.type, list_item_data.storeName)"
               v-bind="{
-                fileName: list_item_data.storeName,
-                type_appoint: 'folder'
+                file_obj: {
+                  name: '打开所在文件夹',
+                  type: 'folder'
+                }
               }"></File_icon>
           </div>
         </div>
@@ -144,8 +146,6 @@
       },
 
       handle_cover_img_error(e) {
-        // console.log('出错啦~~~~~~~~~~~~~~~~~~~~', e)
-        // e.target.src = e.target.src.replace('.jpg', '.png')
         let temp_img = new Image()
         temp_img.src = e.target.src.replace('.jpg', '.png')
         temp_img.addEventListener('load', () => {
@@ -157,10 +157,7 @@
           e.target.src = IMG_LOAD_ERROR
         })
       }
-    },
-
-    created() {},
-    mounted() {}
+    }
   }
 </script>
 

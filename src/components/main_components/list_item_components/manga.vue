@@ -91,12 +91,15 @@
             <span class="img-info display-inline-block">
               <File_icon
                 class="file-names click-active hover-active"
-                fileName="图片信息"
                 @click="open_in_chnMangaReader"
                 v-bind="{
-                  tooltip_direction: 'left-end',
-                  type_appoint: 'img',
-                  tooltip_disabled: true
+                  file_obj: {
+                    name: '22.jpg',
+                    type: 'file'
+                  },
+                  option: {
+                    tooltip_appoint: '在漫画阅读器中打开'
+                  }
                 }"></File_icon>
               <span>× {{ file_names_not_need_show.length }}</span>
             </span>
@@ -104,11 +107,9 @@
             <template v-for="file in file_names_need_show">
               <File_icon
                 class="file-names click-active hover-active"
-                :fileName="file"
-                @click="open(list_item_data.type, list_item_data.storeName, file)"
+                @click="open(list_item_data.type, list_item_data.storeName, file.name)"
                 v-bind="{
-                  url_exact: true,
-                  tooltip_direction: 'left-end'
+                  file_obj: file
                 }"></File_icon>
             </template>
 
@@ -116,8 +117,10 @@
               class="file-names last click-active hover-active"
               @click="open(list_item_data.type, list_item_data.storeName)"
               v-bind="{
-                fileName: list_item_data.storeName,
-                type_appoint: 'folder'
+                file_obj: {
+                  name: '打开所在文件夹',
+                  type: 'folder'
+                }
               }"></File_icon>
           </div>
         </div>
@@ -162,7 +165,9 @@
 
       // 不需要展示的文件，即 图片
       file_names_not_need_show() {
-        return this.list_item_data.file_names.filter(e => !this.file_name_need_show(e))
+        return this.list_item_data.file_names
+          .filter(e => !this.file_name_need_show(e))
+          .map(e => e.name)
       }
     },
 
@@ -202,8 +207,8 @@
         })
       },
 
-      file_name_need_show(filname) {
-        return !(/.jpg$/.test(filname) || /.png$/.test(filname) || /.JPG$/.test(filname))
+      file_name_need_show(file) {
+        return !(/.jpg$/.test(file.name) || /.png$/.test(file.name) || /.JPG$/.test(file.name))
       },
 
       open_in_chnMangaReader() {
