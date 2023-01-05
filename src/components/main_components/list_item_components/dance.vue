@@ -1,5 +1,5 @@
 <template>
-  <div class="list-item">
+  <div class="list-item" :class="{ selected: isSelected }">
     <div class="title-box clearfix">
       <span
         class="name float-left click-active hover-active"
@@ -121,7 +121,10 @@
           </div>
         </div>
 
-        <div class="buttons-box">
+        <div class="buttons-box" @selectstart.prevent>
+          <div class="select-box">
+            <el-switch v-model="isSelected" size="large" />
+          </div>
           <el-button type="warning" @click="modify(list_item_data)">修改信息</el-button>
         </div>
       </div>
@@ -145,6 +148,52 @@
         ComponentName: 'main.vue  infinite_list.vue  dance.vue'
       }
     },
+
+    computed: {
+      isSelected: {
+        // getter
+        get() {
+          if (
+            this.store.temp_data.list_data_selected &&
+            this.store.temp_data.list_data_selected[this.list_item_data.type]
+          ) {
+            let selected_obj = this.store.temp_data.list_data_selected[this.list_item_data.type]
+
+            return selected_obj[this.list_item_data.storeName]
+          }
+
+          return false
+        },
+        // setter
+        set(val) {
+          if (!this.store.temp_data.list_data_selected) {
+            this.store.temp_data.list_data_selected = {}
+          }
+          if (!this.store.temp_data.list_data_selected[this.list_item_data.type]) {
+            this.store.temp_data.list_data_selected[this.list_item_data.type] = {}
+          }
+
+          if (val === true) {
+            this.store.temp_data.list_data_selected[this.list_item_data.type][
+              this.list_item_data.storeName
+            ] = true
+          } else {
+            delete this.store.temp_data.list_data_selected[this.list_item_data.type][
+              this.list_item_data.storeName
+            ]
+          }
+
+          // 将临时选择列表发送到后端
+          this.$axios
+            .post(
+              this.store.api_server + `/selected/set/${this.list_item_data.type}`,
+              this.store.temp_data.list_data_selected[this.list_item_data.type]
+            )
+            .then(() => {})
+        }
+      }
+    },
+
     methods: {
       open(type, ...path_arr) {
         console.log(path_arr)
@@ -174,6 +223,9 @@
 
 <style scoped lang="less">
   .list-item {
+    &.selected {
+      background-color: #ffee006a !important;
+    }
     .title-box {
       .name,
       .other-name {
@@ -263,6 +315,9 @@
         }
 
         .buttons-box {
+          .select-box {
+            margin-bottom: 10px;
+          }
           margin: 5px;
           text-align: right;
         }

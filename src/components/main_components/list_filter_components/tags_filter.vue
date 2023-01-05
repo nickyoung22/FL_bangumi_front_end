@@ -92,7 +92,11 @@
         AND_logic: true
       }
     },
-
+    computed: {
+      overflow() {
+        return this.show ? 'auto' : 'hidden'
+      }
+    },
     methods: {
       filter() {
         this.is_filtering = true
@@ -196,7 +200,7 @@
 <style scoped lang="less">
   .filter-box {
     max-height: 70vh;
-    overflow: auto;
+    overflow: v-bind(overflow);
 
     .title {
       position: sticky;

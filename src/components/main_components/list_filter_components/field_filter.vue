@@ -138,6 +138,11 @@
         // selected_data:[] // 目前field只检索一个，没有响应式数据，直接传入
       }
     },
+    computed: {
+      overflow() {
+        return this.show ? 'auto' : 'hidden'
+      }
+    },
 
     methods: {
       open(type, ...path_arr) {
@@ -303,7 +308,7 @@
 <style scoped lang="less">
   .filter-box {
     max-height: 70vh;
-    overflow: auto;
+    overflow: v-bind(overflow);
 
     .title {
       font-size: var(--body-font-size);

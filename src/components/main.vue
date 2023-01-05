@@ -18,7 +18,9 @@
     <div class="right">
       <div class="slide-bar" ref="slideBar"></div>
       <Filter_info :type="type"></Filter_info>
+      <hr />
       <Tags_filter :type="type" :tags_cssSelector="`.tags_highlight`"></Tags_filter>
+      <hr />
       <Field_filter
         v-for="field in filter_fields"
         :key="field.name"
@@ -27,6 +29,10 @@
         :field="field.name"
         :field_showName="field.showName"
         :field_cssSelector="`.${field.name}_highlight`"></Field_filter>
+      <hr />
+      <template v-for="plugin_name in plugin_names" :key="plugin_name">
+        <component :is="plugin_name" :type="type" :type_showName="type_showName"></component>
+      </template>
     </div>
   </div>
 </template>
@@ -37,6 +43,13 @@
   for (let path of Object.keys(_list_items)) {
     let name = path.match(/.\/main_components\/list_item_components\/(.*)\.vue/)[1]
     list_items[name] = defineAsyncComponent(_list_items[path])
+  }
+
+  const _plugins = import.meta.glob('./main_components/plugins_components/*.vue')
+  const plugins = {}
+  for (let path of Object.keys(_plugins)) {
+    let name = path.match(/.\/main_components\/plugins_components\/(.*)\.vue/)[1]
+    plugins[name] = defineAsyncComponent(_plugins[path])
   }
 
   import { defineAsyncComponent } from 'vue'
@@ -66,7 +79,9 @@
 
       loading_item_component,
 
-      ...list_items // 将所有列表项组件以异步组件的形式加载
+      ...list_items, // 将所有 列表项组件 以异步组件的形式加载
+
+      ...plugins // 将所有 插件组件 以异步组件的形式加载
     },
     data() {
       return {
@@ -76,7 +91,8 @@
 
         type: '',
         type_showName: '',
-        filter_fields: []
+        filter_fields: [],
+        plugin_names: []
       }
     },
 
@@ -92,7 +108,7 @@
     created() {
       this.type = this.$route.params.route2
 
-      // 只有设置好route信息后，才能才能去遍历
+      // 设置 种类名称 列表项组件
       let set_typeName_componentName = () => {
         for (let item1 of this.store.temp_data.routes) {
           for (let item2 of item1.children) {
@@ -104,13 +120,7 @@
           }
         }
       }
-      if (this.store.temp_data.routes) {
-        set_typeName_componentName()
-      } else {
-        this.store.get_system_info().then(res => {
-          set_typeName_componentName()
-        })
-      }
+      set_typeName_componentName()
 
       // 找出要设置过滤器的字段
       this.$axios.get(this.store.api_server + '/format/' + this.type).then(res => {
@@ -124,6 +134,20 @@
             }
           })
       })
+
+      // 找出要设置的插件
+      let set_plugins = () => {
+        for (let item1 of this.store.temp_data.routes) {
+          for (let item2 of item1.children) {
+            if (item2.code === this.type) {
+              const plugin_names = item2.plugins
+              this.plugin_names = plugin_names
+            }
+          }
+        }
+      }
+
+      set_plugins()
     },
     mounted() {
       // 设置横向拖动大小的功能
@@ -132,4 +156,51 @@
   }
 </script>
 
-<style scoped></style>
+<style scoped>
+  .main > .left {
+    /* flex: 1; */
+    margin-right: calc(var(--right-sider-width) + 10px);
+  }
+  .main > .right {
+    position: fixed;
+    right: 2px;
+    background-color: var(--header-background-color);
+    top: var(--header-height);
+    display: none;
+    width: var(--right-sider-width);
+    padding-left: 2px;
+    /* border: 2px solid rgb(37, 237, 255); */
+    height: 85vh;
+
+    /* 侧边栏滚动 */
+    /* overflow: auto; */
+  }
+
+  @media (min-width: 400px) {
+    .main > .right {
+      display: block;
+    }
+  }
+
+  .filter-box,
+  .plugin-box {
+    border: 2px solid rgba(250, 128, 114, 0.747);
+    border-radius: 15px;
+    margin: 3px;
+  }
+
+  .slide-bar {
+    position: absolute;
+    top: 0;
+    left: -12px;
+    width: 15px;
+    height: 100%;
+    border-radius: 8px;
+    background-color: rgb(124, 1, 255);
+  }
+
+  .slide-bar:hover {
+    cursor: e-resize !important;
+    background-color: rgb(244, 42, 255);
+  }
+</style>

@@ -119,7 +119,7 @@ export const useStore = defineStore('store', {
             showClose: true
           })
         },
-        alert_error = () => {
+        alert_error = message => {
           console.log(`从 list_data 中 更新 list_data_filtered 的数据： ${message}！！`)
           ElMessage({
             message: `${message}！！`,
