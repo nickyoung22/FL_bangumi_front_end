@@ -15,7 +15,6 @@
   function modify_console_log() {
     // 同一时间发出的信息，相同的颜色显示
     console.original_log = console.log
-
     let now_color_index = 0,
       colors_arr = ['#e8eae0', '#f5bd00', '#937bf6', '#1ce1ff'],
       last_date_for_consoleLog = ''
