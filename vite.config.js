@@ -12,10 +12,18 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 // 用来调试vite插件 的插件，访问：http://localhost:5174/__inspect/#/
 import Inspect from 'vite-plugin-inspect'
 
+// 类似webpack-bundle-analyzer打包分析插件
+import visualizer from 'rollup-plugin-visualizer'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
+    visualizer({
+      open: true,
+      gzipSize: true,
+      brotliSize: true
+    }),
     Inspect(),
     // ...
     AutoImport({
