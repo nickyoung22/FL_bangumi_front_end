@@ -92,9 +92,12 @@
 </template>
 
 <script>
+  import { defineAsyncComponent } from 'vue'
   import { useStore } from '@/stores/store.js'
-  import chn_input_array from './comps/chn_input_array.vue'
+
   import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+
+  import chn_input_array from './comps/chn_input_array.vue'
 
   export default {
     name: 'Add_Resources_detail_name_for_keep-alive_exclude',
@@ -103,7 +106,9 @@
       return { store }
     },
 
-    components: { chn_input_array },
+    components: {
+      chn_input_array
+    },
     data() {
       return {
         ComponentName: 'Add_Resources_detail.vue',
