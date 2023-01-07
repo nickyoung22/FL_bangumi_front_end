@@ -112,11 +112,12 @@
       return { store }
     },
 
-    props: ['list_item_data'],
-
     components: {
       File_icon
     },
+
+    props: ['list_item_data'],
+  
     data() {
       return {
         ComponentName: 'main.vue  infinite_list.vue  anime_movie.vue',

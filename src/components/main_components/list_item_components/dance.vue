@@ -135,10 +135,16 @@
 <script>
   import { useStore } from '@/stores/store.js'
 
+  import File_icon from '@/components/small_components/file_icon.vue'
+
   export default {
     setup() {
       const store = useStore()
       return { store }
+    },
+
+    components: {
+      File_icon
     },
 
     props: ['list_item_data'],

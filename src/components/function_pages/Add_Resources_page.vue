@@ -54,6 +54,7 @@
 
 <script>
   import { useStore } from '@/stores/store.js'
+
   import File_icon from '@/components/small_components/file_icon.vue'
 
   export default {

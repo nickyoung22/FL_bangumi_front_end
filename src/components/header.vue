@@ -16,20 +16,28 @@
 </template>
 
 <script>
+  // 导航栏 左边
+  import Back from './header_components/back.vue'
   import Logo from './header_components/logo.vue'
+  import Home from './header_components/Home.vue'
+  // 导航栏 中间
   import RouterLinks from './header_components/routerLinks.vue'
+  // 导航栏 右边
   import Searcher from './header_components/searcher.vue'
   import Menu from './header_components/menu.vue'
-  import Back from './header_components/back.vue'
-  import Home from './header_components/Home.vue'
 
   export default {
     setup() {},
     components: {
+      // 导航栏 左边
+      Back,
       Logo,
+      Home,
+      // 导航栏 中间
       RouterLinks,
+      // 导航栏 右边
       Searcher,
-      Home
+      Menu
     },
     data() {
       return {

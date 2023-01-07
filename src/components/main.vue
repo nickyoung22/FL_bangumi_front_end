@@ -38,6 +38,19 @@
 </template>
 
 <script>
+  import { defineAsyncComponent } from 'vue'
+
+  import Infinite_list from './main_components/infinite_list.vue'
+  import loading_item_component from './main_components/list_item_components/loading.vue'
+
+  import Filter_info from './main_components/list_filter_components/filter_info.vue'
+  import Tags_filter from './main_components/list_filter_components/tags_filter.vue'
+  import Field_filter from './main_components/list_filter_components/field_filter.vue'
+
+  import { useStore } from '@/stores/store.js'
+
+  import main_page_resize_fun from '@/utils/main_page_resize.js'
+
   const _list_items = import.meta.glob('./main_components/list_item_components/*.vue')
   const list_items = {}
   for (let path of Object.keys(_list_items)) {
@@ -51,19 +64,6 @@
     let name = path.match(/.\/main_components\/plugins_components\/(.*)\.vue/)[1]
     plugins[name] = defineAsyncComponent(_plugins[path])
   }
-
-  import { defineAsyncComponent } from 'vue'
-
-  import Infinite_list from './main_components/infinite_list.vue'
-  import loading_item_component from './main_components/list_item_components/loading.vue'
-
-  import Filter_info from './main_components/list_filter_components/filter_info.vue'
-  import Tags_filter from './main_components/list_filter_components/tags_filter.vue'
-  import Field_filter from './main_components/list_filter_components/field_filter.vue'
-
-  import { useStore } from '@/stores/store.js'
-
-  import main_page_resize_fun from '@/utils/main_page_resize.js'
 
   export default {
     setup() {
