@@ -4,7 +4,6 @@
 import { defineStore } from 'pinia'
 import axios from '../utils/axios'
 import order from '../utils/order'
-import router from '@/router/router.js'
 
 export const useStore = defineStore('store', {
   state: () => ({

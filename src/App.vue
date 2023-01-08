@@ -1,39 +1,18 @@
 <script setup>
-  import { ref } from 'vue'
-  import { onMounted } from 'vue'
-  import Header from './components/header.vue'
-  import { useStore } from '@/stores/store.js'
-  import { watch } from 'vue'
+  import { ref, watch } from 'vue'
   import { useRouter, useRoute } from 'vue-router'
+  import { useStore } from '@/stores/store.js'
+
+  import Header from './components/header.vue'
+
+  import modify_console_log from '@/utils/modify_console_log.js'
   import _throttle from '@/utils/_throttle.js'
 
   const store = useStore()
   const route = useRoute()
-  const router = useRouter()
 
   // 改写console.log方法，使其带时间显示
-  function modify_console_log() {
-    // 同一时间发出的信息，相同的颜色显示
-    console.original_log = console.log
-    let now_color_index = 0,
-      colors_arr = ['#e8eae0', '#f5bd00', '#937bf6', '#1ce1ff'],
-      last_date_for_consoleLog = ''
-
-    console.log = function (...params) {
-      let dateNow = new Date().toLocaleString()
-
-      if (last_date_for_consoleLog !== '') {
-        if (dateNow !== last_date_for_consoleLog) {
-          now_color_index = (now_color_index + 1) % colors_arr.length
-        }
-      }
-
-      last_date_for_consoleLog = dateNow
-
-      console.original_log(`[%c${dateNow}] `, `color : ${colors_arr[now_color_index]};`, ...params)
-    }
-  }
-  // modify_console_log()
+  modify_console_log()
 
   // websocket连接 判断服务器是否持续正在正常运行
   ;(() => {
@@ -73,9 +52,7 @@
   })()
 
   // 一开始直接请求 所有数据
-  ;(() => {
-    store.init()
-  })()
+  store.init()
 
   // 是否全屏相关
   const full_screen = ref(false)

@@ -1,5 +1,5 @@
 // 设置横向拖动大小的功能
-export default function main_page_resize_fun() {
+export default function main_page_resize_side_bar_fun() {
   console.log(' // 设置横向拖动大小的功能')
 
   let slideBar = this.$refs.slideBar,
