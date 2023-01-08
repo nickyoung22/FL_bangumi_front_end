@@ -17,20 +17,13 @@ import 'default-passive-events'
 // element-ui 暗黑模式
 import 'element-plus/theme-chalk/dark/css-vars.css'
 
-// 导入所有图标
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-
-import axios from './utils/axios.js'
-
 const pinia = createPinia()
 const app = createApp(App)
 
 app.config.globalProperties.$axios = axios
 
-// 注册所有图标
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
-}
+import axios from './utils/axios.js'
+
 
 console.log('app实例:  ', app) //
 

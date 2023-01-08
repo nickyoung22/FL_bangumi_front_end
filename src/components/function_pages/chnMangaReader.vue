@@ -68,12 +68,12 @@
 
           <div v-if="!muti_mode" class="previous" @click="previous">
             <el-icon>
-              <ArrowLeftBold />
+              <i-ep-arrow-left-bold />
             </el-icon>
           </div>
           <div v-if="!muti_mode" class="next" @click="next">
             <el-icon>
-              <ArrowRightBold />
+              <i-ep-arrow-right-bold />
             </el-icon>
           </div>
         </div>
@@ -82,7 +82,7 @@
 
       <div class="menu" :class="{ unfolding: menu_show }" @mouseover="Show" @mouseleave="offShow">
         <el-icon class="icon" :class="{ 'unfolding-icon': menu_show }">
-          <ArrowDown />
+          <i-ep-arrow-down />
         </el-icon>
         <Transition @after-enter="transition_finished = true">
           <div class="menu-list" :class="{ unfolding: menu_show }" v-show="menu_show">

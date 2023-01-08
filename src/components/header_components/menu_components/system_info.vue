@@ -8,7 +8,7 @@
       placement="left-start"
       :hide-after="0">
       <el-icon class="icon" @click="open_System_Info_page">
-        <Setting />
+        <i-ep-setting />
       </el-icon>
     </el-tooltip>
   </div>

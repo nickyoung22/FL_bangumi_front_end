@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <el-icon @click="goHome" class="icon">
-      <House />
+      <i-ep-house />
     </el-icon>
   </div>
 </template>

@@ -58,7 +58,7 @@
     </Transition>
 
     <el-icon @click.stop="toggleShow" class="icon" :class="{ 'searching-icon': input_show }">
-      <Search />
+      <i-ep-search />
     </el-icon>
   </div>
 </template>

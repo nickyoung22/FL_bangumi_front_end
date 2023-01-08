@@ -1,7 +1,7 @@
 <template>
   <div class="back">
     <el-icon @click="back" class="icon">
-      <Back />
+      <i-ep-back />
     </el-icon>
   </div>
 </template>

@@ -8,7 +8,7 @@
       placement="left-start"
       :hide-after="0">
       <el-icon class="icon" @click="open_Add_Resources_page">
-        <Plus />
+        <i-ep-plus />
       </el-icon>
     </el-tooltip>
   </div>
