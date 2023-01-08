@@ -11,6 +11,7 @@ node_modules
 .DS_Store
 dist
 dist-ssr
+打包体积分析.html
 coverage
 *.local
 

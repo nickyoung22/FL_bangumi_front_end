@@ -15,17 +15,12 @@ import IconsResolver from 'unplugin-icons/resolver'
 import Inspect from 'vite-plugin-inspect'
 
 // 类似webpack-bundle-analyzer打包分析插件
-import visualizer from 'rollup-plugin-visualizer'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    visualizer({
-      open: true,
-      gzipSize: true,
-      brotliSize: true
-    }),
     Inspect(),
     // 自动导入相关
     AutoImport({
@@ -66,6 +61,17 @@ export default defineConfig({
     // https://blog.csdn.net/webbirds/article/details/127283504
     Icons({
       autoInstall: true
+    }),
+
+    // https://github.com/btd/rollup-plugin-visualizer
+    visualizer({
+      gzipSize: true,
+      brotliSize: true,
+
+      open: true,
+
+      // emitFile: true, // 生成到dist文件夹下
+      filename: '打包体积分析.html' //分析图生成的文件名
     })
   ],
   resolve: {
