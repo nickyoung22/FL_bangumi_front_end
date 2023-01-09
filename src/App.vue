@@ -12,7 +12,7 @@
   const route = useRoute()
 
   // 改写console.log方法，使其带时间显示
-  modify_console_log()
+  // modify_console_log()
 
   // websocket连接 判断服务器是否持续正在正常运行
   ;(() => {
