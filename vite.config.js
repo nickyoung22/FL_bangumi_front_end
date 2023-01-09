@@ -17,7 +17,10 @@ import Inspect from 'vite-plugin-inspect'
 // 类似webpack-bundle-analyzer打包分析插件
 import { visualizer } from 'rollup-plugin-visualizer'
 
-// https://vitejs.dev/config/
+// vite-vue3优化配置  https://zhuanlan.zhihu.com/p/440890930
+// vite打包配置(静态资源合并打包/清除log/gzip压缩/ENV配置等) https://blog.csdn.net/shinjie1210/article/details/122473024
+
+// https://cn.vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
@@ -95,8 +98,18 @@ export default defineConfig({
         //     console.log(id)
         //     return 'main_components-Chunk'
         //   }
-        // }
+        // },
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
       }
-    }
+    },
+
+    minify: 'esbuild' // 默认
+  },
+  // vite 构建移除 console https://www.cnblogs.com/guangzan/p/16633753.html
+  esbuild: {
+    drop: ['console', 'debugger']
+    // drop: mode === 'production' ? ['console', 'debugger'] : []
   }
 })
