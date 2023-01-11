@@ -15,7 +15,7 @@
         </template>
       </Infinite_list>
     </div>
-    <div class="right">
+    <div class="right" ref="right">
       <div class="slide-bar" ref="slideBar"></div>
       <Filter_info :type="type"></Filter_info>
       <hr />
@@ -159,28 +159,33 @@
 </script>
 
 <style scoped lang="less">
+  /* 右侧边栏宽度 */
+
   .main {
+    --right-sider-width: 350px;
+    /* --right-sider-width: 10px; */
+
     .left {
       /* flex: 1; */
       margin-right: calc(var(--right-sider-width) + 10px);
     }
 
-    .slide-bar {
-      position: absolute;
-      top: 0;
-      left: -12px;
-      width: 15px;
-      height: 100%;
-      border-radius: 8px;
-      background-color: rgb(124, 1, 255);
-
-      &:hover {
-        cursor: e-resize !important;
-        background-color: rgb(244, 42, 255);
-      }
-    }
-
     .right {
+      .slide-bar {
+        position: absolute;
+        top: 0;
+        left: -12px;
+        width: 15px;
+        height: 100%;
+        border-radius: 8px;
+        background-color: rgb(124, 1, 255);
+
+        &:hover {
+          cursor: e-resize !important;
+          background-color: rgb(244, 42, 255);
+        }
+      }
+
       position: fixed;
       right: 2px;
       background-color: var(--header-background-color);

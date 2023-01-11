@@ -16,7 +16,7 @@ export default function main_page_resize_side_bar_fun() {
       return
     }
     slideBar.style.cursor = 'e-resize'
-    document.body.style.setProperty(
+    this.$refs.main.style.setProperty(
       '--right-sider-width',
       `${document.body.clientWidth - e.clientX}px`
     )
