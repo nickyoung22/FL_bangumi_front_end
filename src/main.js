@@ -27,7 +27,7 @@ import axios from './utils/axios.js'
 
 console.log('app实例:  ', app) //
 
-app.mixin(mixin)
+// app.mixin(mixin)
 
 app.use(pinia) // 使用 pinia 全局状态管理
 
