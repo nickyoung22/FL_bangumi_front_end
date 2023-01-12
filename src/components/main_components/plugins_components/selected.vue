@@ -53,6 +53,7 @@
 
 <script>
   import { useStore } from '@/stores/store.js'
+  import NProgress from 'nprogress'
 
   export default {
     setup() {
@@ -115,6 +116,11 @@
       },
 
       clear_templist() {
+        NProgress.start()
+        this.$nextTick(() => {
+          NProgress.done()
+        })
+
         if (!this.store.temp_data.list_data_selected) {
           this.store.temp_data.list_data_selected = {}
         }

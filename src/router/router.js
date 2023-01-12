@@ -2,7 +2,6 @@ import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router
 import { useStore } from '@/stores/store.js'
 
 import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
 
 const main = () => import('@/components/main.vue')
 

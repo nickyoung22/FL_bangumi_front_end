@@ -10,6 +10,7 @@
 
 <script>
   import { useStore } from '@/stores/store.js'
+  import NProgress from 'nprogress'
 
   export default {
     setup() {
@@ -25,6 +26,11 @@
 
     methods: {
       order_change_handler() {
+        NProgress.start()
+        this.$nextTick(() => {
+          NProgress.done()
+        })
+
         this.store.execute_filters()
 
         // 从localstorage中

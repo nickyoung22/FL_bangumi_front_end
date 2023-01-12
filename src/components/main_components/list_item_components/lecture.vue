@@ -129,6 +129,7 @@
   import { useStore } from '@/stores/store.js'
 
   import File_icon from '@/components/small_components/file_icon.vue'
+  import NProgress from 'nprogress'
 
   export default {
     setup() {
@@ -165,6 +166,11 @@
         },
         // setter
         set(val) {
+          NProgress.start()
+          this.$nextTick(() => {
+            NProgress.done()
+          })
+
           if (!this.store.temp_data.list_data_selected) {
             this.store.temp_data.list_data_selected = {}
           }

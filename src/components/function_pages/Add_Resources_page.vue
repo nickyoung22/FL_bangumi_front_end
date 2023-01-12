@@ -22,6 +22,7 @@
 
     <div class="right">
       <Infinite_list
+        v-if="list_show"
         class="ul-container"
         :list_data="render_data"
         :initial_render_num="30"
@@ -83,6 +84,7 @@
         ComponentName: 'Add_Resources_page.vue',
 
         routes: this.store.temp_data.routes,
+        list_show: false,
 
         type_now: '',
         path_now: [],
@@ -151,9 +153,11 @@
         () => {
           if (!this.$route.query.storePath) {
             this.render_data = []
+            this.list_show = false
             return
           }
 
+          this.list_show = true
           // 对路由变化做出响应...
           this.type_now = this.$route.query.type
           this.path_now = this.pathStr_2_pathArr(this.$route.query.storePath)

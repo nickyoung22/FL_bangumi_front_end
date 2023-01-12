@@ -72,6 +72,7 @@
 <script>
   import { useStore } from '@/stores/store.js'
   import { Select, Refresh } from '@element-plus/icons-vue'
+  import NProgress from 'nprogress'
 
   export default {
     setup() {
@@ -99,6 +100,10 @@
     },
     methods: {
       filter() {
+        NProgress.start()
+        this.$nextTick(() => {
+          NProgress.done()
+        })
         this.is_filtering = true
 
         console.log(
@@ -160,6 +165,10 @@
         this.highlight()
       },
       refresh() {
+        NProgress.start()
+        this.$nextTick(() => {
+          NProgress.done()
+        })
         this.is_filtering = false
 
         console.log(`<${this.type} tags过滤器>  刷新过滤逻辑`)

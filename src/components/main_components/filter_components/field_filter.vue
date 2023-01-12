@@ -115,6 +115,7 @@
   import { useStore } from '@/stores/store.js'
   import { Refresh } from '@element-plus/icons-vue'
   import File_icon from '@/components/small_components/file_icon.vue'
+  import NProgress from 'nprogress'
 
   export default {
     setup() {
@@ -154,6 +155,11 @@
       },
 
       filter(selected_data) {
+        NProgress.start()
+        this.$nextTick(() => {
+          NProgress.done()
+        })
+
         this.is_filtering = true
 
         console.log(
@@ -202,6 +208,10 @@
         this.highlight(false, selected_data)
       },
       refresh() {
+        NProgress.start()
+        this.$nextTick(() => {
+          NProgress.done()
+        })
         this.is_filtering = false
 
         console.log(`<${this.type}  ${this.field}过滤器>  刷新过滤逻辑`)

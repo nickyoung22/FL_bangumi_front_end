@@ -269,6 +269,10 @@
         border: 1.8px solid rgba(250, 128, 114, 0.575);
 
         .result-info {
+          position: sticky;
+          top: 0;
+          background-color: #003b76;
+
           font-weight: 600;
           border-bottom: 2px solid #c1c1c1;
 
