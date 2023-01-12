@@ -1,5 +1,5 @@
 <template>
-  <div class="infinite-list-class">
+  <div class="infinite-list-class" ref="infinite-list-DOM">
     <h2 class="info" ref="infoDOM">
       列表已展示{{ render_list_data.length }}/{{ list_data.length }} 条数据，
       <span v-if="more_data_to_render">下滑产生更多数据</span>
@@ -18,10 +18,8 @@
         <el-progress :percentage="100" :format="() => ``" :indeterminate="true" :duration="0.8" />
       </div>
     </div>
-    <div v-else class="render-finished-notify notify">
-      <div class="icons">
-        <el-progress class="warn-bar" :percentage="100" :format="() => `加载完毕-----无更多数据`" />
-      </div>
+    <div v-else class="render-finished-notify notify progress-bars">
+      <el-progress class="warn-bar" :percentage="100" :format="() => `加载完毕-----无更多数据`" />
     </div>
   </div>
 </template>
@@ -36,11 +34,28 @@
       return { store }
     },
 
-    props: ['list_data', 'initial_render_num', 'add_render_num'],
+    props: {
+      list_data: {
+        type: Array
+      },
+      initial_render_num: {
+        type: Number
+      },
+      add_render_num: {
+        type: Number
+      },
+      scroll_mode: {
+        type: String,
+        default: 'document'
+      }
+    },
+
     data() {
       return {
         ComponentName: 'main.vue  infinite_list.vue',
-        render_num: 0
+        render_num: 0,
+        containerDOM: null,
+        containerDOM_bind: null
       }
     },
     computed: {
@@ -84,14 +99,17 @@
       },
       wheelHandler: _throttle(function (e) {
         if (e.deltaY < 0) return
+
+        console.log(this.scroll_mode)
         console.log(`监听到 向下滚了~~~~~~~~~~~~`)
 
-        let html = document.documentElement
         // 距离底部的距离
-        let distance_to_bottom = html.scrollHeight - (html.scrollTop + html.clientHeight)
+        let distance_to_bottom =
+          this.containerDOM.scrollHeight -
+          (this.containerDOM.scrollTop + this.containerDOM.clientHeight)
         // console.log(distance_to_bottom, html.clientHeight / 2)//
-        if (distance_to_bottom < html.clientHeight / 2) {
-          console.log('即将滚动到底部')
+        if (distance_to_bottom < this.containerDOM.clientHeight / 2) {
+          console.log('触发条件 加载新数据 --> --> --> --> --> -->')
           this.renderMore()
         }
       }, 50)
@@ -100,24 +118,57 @@
       this.render_num = this.initial_render_num
     },
     mounted() {
-      // info改为绝对定位
       const infoDOM = this.$refs.infoDOM
       const top = infoDOM.offsetTop
       const left = infoDOM.offsetLeft
-      infoDOM.style.position = 'fixed'
+      const ulDOM = this.$refs.ulDOM
+
+      switch (this.scroll_mode) {
+        case 'document':
+          this.containerDOM = document.documentElement
+          this.containerDOM_bind = document
+          break
+
+        case 'box':
+          this.containerDOM = this.$refs['infinite-list-DOM']
+          this.containerDOM_bind = this.$refs['infinite-list-DOM']
+          break
+      }
+
+      if (this.scroll_mode === 'document') {
+        // info改为 绝对定位
+        infoDOM.style.position = 'fixed'
+      } else if (this.scroll_mode === 'box') {
+        // info改为 粘性定位
+        infoDOM.style.position = 'sticky'
+      }
+
       infoDOM.style.top = top + 'px'
       infoDOM.style.left = left + 'px'
 
-      const ulDOM = this.$refs.ulDOM
       ulDOM.style.marginTop = window.getComputedStyle(infoDOM).height
+
+      console.log(`!!!!!!!!!!!!!!!!!!! 绑定`)
+      console.log(this.containerDOM_bind)
+      console.log(this.wheelHandler)
+      this.containerDOM_bind.addEventListener('wheel', this.wheelHandler)
     },
     activated() {
-      document.addEventListener('wheel', this.wheelHandler)
+      if (this.scroll_mode !== 'box') {
+        console.log(`!!!!!!!!!!!!!!!!!!! 绑定`)
+        console.log(this.containerDOM_bind)
+        console.log(this.wheelHandler)
+        this.containerDOM_bind.addEventListener('wheel', this.wheelHandler)
+      }
     },
     deactivated() {
-      document.removeEventListener('wheel', this.wheelHandler)
+      console.log(` 解绑`)
+      this.containerDOM_bind.removeEventListener('wheel', this.wheelHandler)
     },
-
+    unmounted() {
+      console.log(` 解绑`)
+      this.containerDOM_bind.removeEventListener('wheel', this.wheelHandler)
+    },
     updated() {
       this.$emit('list_updated')
     }

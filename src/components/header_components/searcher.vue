@@ -1,7 +1,7 @@
 <template>
   <div class="searcher">
     <Transition @after-enter="input_onAfterEnter">
-      <div class="input-and-result" v-if="input_show" @click.stop @mousedown.stop>
+      <div class="input-and-result" v-show="input_show" @click.stop @mousedown.stop>
         <el-input
           ref="inputEle"
           class="search-input"
@@ -30,53 +30,71 @@
             :percentage="100"
             :format="() => `${ErrorMsg}`" />
         </div>
-        <ul v-if="this.search_text.trim() !== ''" class="result">
+        <ul v-show="this.search_text.trim() !== ''" class="result">
           <li class="item result-info">
             共
             <span class="num">{{ resultList.length }}</span>
             条搜索结果
           </li>
-          <div class="result-list">
-            <li v-for="item in resultList" :key="item.type + item.storeName" class="item">
-              <span class="type">
-                种类： {{ item.type }}
-                <br />
-              </span>
-              <span class="hover-active highlight">
-                名称： {{ item.name }}
-                <br />
-              </span>
-              <span class="hover-active highlight" v-if="item.other_name.length">
-                别名： {{ item.other_name.join(',') }}
-                <br />
-              </span>
-              <span class="hover-active highlight">存储名称： {{ item.storeName }}</span>
-            </li>
-          </div>
+          <Infinite_list
+            class="result-list"
+            scroll_mode="box"
+            :list_data="resultList"
+            :initial_render_num="10"
+            :add_render_num="6"
+            @list_updated="list_updated_handler">
+            <template v-slot:list_item_component="slot_data">
+              <component
+                :is="get_type_list_item_component(slot_data.list_item_data.type)"
+                :list_item_data="slot_data.list_item_data"
+                :key="`${slot_data.list_item_data.storeName}`"></component>
+            </template>
+          </Infinite_list>
         </ul>
       </div>
     </Transition>
 
-    <el-icon @click.stop="toggleShow" class="icon" :class="{ 'searching-icon': input_show }">
+    <el-icon @mousedown.stop="toggleShow" class="icon" :class="{ 'searching-icon': input_show }">
       <i-ep-search />
     </el-icon>
   </div>
 </template>
 
 <script>
+  import { defineAsyncComponent } from 'vue'
+
   import _debounce from '@/utils/_debounce.js'
   import { useStore } from '@/stores/store.js'
+
+  // 无限列表组件
+  import Infinite_list from '@/components/main_components/infinite_list.vue'
+
+  // 列表项组件
+  import loading_item_component from '@/components/main_components/list_item_components/loading.vue'
+  const _list_items = import.meta.glob('@/components/main_components/list_item_components/*.vue')
+  const list_items = {}
+  for (let path of Object.keys(_list_items)) {
+    let name = path.match(/.\/main_components\/list_item_components\/(.*)\.vue/)[1]
+    list_items[name] = defineAsyncComponent(_list_items[path])
+  }
 
   export default {
     setup() {
       const store = useStore()
       return { store }
     },
+
+    components: {
+      Infinite_list,
+      ...list_items // 将所有 列表项组件 以异步组件的形式加载
+    },
+
     data() {
       return {
         ComponentName: 'header.vue  searcher.vue',
         input_show: false,
         search_text: '',
+        reg: null,
         isSearching: false,
         // isEmptyResult: false,
         isError: false,
@@ -84,6 +102,7 @@
         resultList: []
       }
     },
+
     computed: {
       isEmptyResult() {
         // 结果为空标志，仅在 结果数组为0，并且搜索过程已经结束时，并且搜索框内容不为空，并且没有出错
@@ -142,6 +161,8 @@
           'gi'
         )
 
+        this.reg = reg
+
         // 模拟搜索的网络请求操作
         let doSearch = () => {
           return new Promise((resolve, reject) => {
@@ -155,7 +176,8 @@
               list_data_type.forEach(data_obj => {
                 let TEXT = ''
                 for (let key of Object.keys(data_obj)) {
-                  if (!/^(name|other_name|storeName)$/.test(key)) continue
+                  // 只搜索 name other_name
+                  if (!/^(name|other_name)$/.test(key)) continue
                   TEXT += `${
                     typeof data_obj[key] === 'object' ? data_obj[key].join(' ') : data_obj[key]
                   }\n`
@@ -175,29 +197,6 @@
         doSearch()
           .then(r => {
             this.resultList = r
-            //高亮 highlight
-            let HighLight = html => {
-              return html.replace(reg, function (item) {
-                return '<mark>' + item + '</mark>'
-              })
-            }
-            let unHighLight = html => {
-              var reg = new RegExp('(<mark>|</mark>)', 'g')
-              return html.replace(reg, function (item) {
-                return ''
-              })
-            }
-            this.$nextTick(() => {
-              console.log(
-                '渲染后的列表 条目个数：',
-                document.querySelectorAll('.result .result-list li').length
-              )
-              ;[...document.querySelectorAll('.result .result-list li span.highlight')].forEach(
-                e => {
-                  e.innerHTML = HighLight(unHighLight(e.innerHTML))
-                }
-              )
-            })
           })
           .catch(err => {
             this.isError = true
@@ -205,19 +204,57 @@
             throw new Error(err)
           })
           .finally(() => {
-            this.isSearching = false
             // 这里是防止 滞后的请求结果使得当前已经空的列表又被渲染出了内容
             if (this.search_text.trim() === '') {
               this.resultList = []
-
-              this.isSearching = false
-              return
             }
+
+            this.$nextTick(() => {
+              setTimeout(() => {
+                this.isSearching = false
+              }, 200)
+            })
           })
       }),
+
       input_onAfterEnter(el) {
         // 打开后 自动聚焦输入框
         this.$refs.inputEle.focus()
+      },
+
+      get_type_list_item_component(type) {
+        for (let item1 of this.store.temp_data.routes) {
+          for (let item2 of item1.children) {
+            if (item2.code === type) {
+              return item2.componentName
+            }
+          }
+        }
+      },
+
+      list_updated_handler() {
+        let reg = this.reg
+        //高亮 highlight
+        let HighLight = html => {
+          return html.replace(reg, function (item) {
+            return '<mark>' + item + '</mark>'
+          })
+        }
+        let unHighLight = html => {
+          let reg = new RegExp('(<mark>|</mark>)', 'g')
+          return html.replace(reg, function (item) {
+            return ''
+          })
+        }
+
+        setTimeout(() => {
+          // 高亮
+          console.log('高亮搜索结果')
+          console.log([...document.querySelectorAll('.result .result-list span.name')])
+          ;[...document.querySelectorAll('.result .result-list span.name')].forEach(e => {
+            e.innerHTML = HighLight(unHighLight(e.innerHTML))
+          })
+        }, 200)
       }
     },
 
@@ -264,9 +301,10 @@
       }
 
       .result {
-        height: 80vh;
         background-color: #181818;
-        border: 1.8px solid rgba(250, 128, 114, 0.575);
+        border: 5px solid rgb(255, 119, 0);
+        border-top: transparent;
+        box-shadow: 2px 2px 12px 10px rgb(136, 136, 136);
 
         .result-info {
           position: sticky;
@@ -282,28 +320,9 @@
         }
 
         .result-list {
-          .item {
-            border-bottom: 1.8px solid rgba(0, 170, 255, 0.575);
-            word-wrap: break-word;
-
-            &:nth-child(even) {
-              background-color: var(--my-gray2);
-            }
-
-            &:hover {
-              background-color: var(--active-list-item);
-            }
-
-            span {
-              &.type {
-                font-size: calc(var(--search-font-size) * 0.68);
-                color: rgb(255, 213, 2);
-              }
-            }
-          }
+          overflow-y: auto;
+          height: 80vh;
         }
-
-        overflow-y: scroll;
       }
     }
 

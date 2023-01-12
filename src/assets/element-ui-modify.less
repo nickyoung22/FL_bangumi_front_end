@@ -7,21 +7,28 @@
 
 .progress-bars {
   .el-progress-bar__outer {
-    height: 0.1rem !important;
+    height: 6.6px !important;
+    background: linear-gradient(200deg, #ff00ff 25%, #00bbff);
   }
 
   span {
-    font-size: calc(var(--search-font-size) * 0.1);
+    font-size: calc(var(--search-font-size) * 0.88);
     color: var(--progress-bar-span-color);
   }
-  .warn-bar span {
-    color: var(--progress-bar-span-color-warn-bar);
+  
+  .warn-bar {
+    span {
+      color: var(--progress-bar-span-color-warn-bar);
+    }
     .el-progress-bar__inner {
-      background-color: var(--progress-bar-span-color-warn-bar);
+      background-color: var(--progress-bar-span-color-warn-bar) !important;
     }
   }
-  .error-bar span {
-    color: var(--progress-bar-span-color-error-bar);
+
+  .error-bar {
+    span {
+      color: var(--progress-bar-span-color-error-bar);
+    }
     .el-progress-bar__inner {
       background-color: var(--progress-bar-span-color-error-bar);
     }

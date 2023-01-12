@@ -96,6 +96,7 @@
 
       ...plugins // 将所有 插件组件 以异步组件的形式加载
     },
+
     data() {
       return {
         ComponentName: 'main.vue',
