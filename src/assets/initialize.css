@@ -51,32 +51,3 @@ body {
     '\5B8B\4F53', sans-serif;
   /* color: #666; */
 }
-
-.hide,
-.none {
-  display: none;
-}
-/* 清除浮动 */
-.clearfix:after {
-  visibility: hidden;
-  clear: both;
-  display: block;
-  content: '.';
-  height: 0;
-}
-
-/* 设置 zoom:1 可以在IE6下清除浮动、解决margin导致的重叠等问题 */
-/* .clearfix {
-  *zoom: 1;
-} */
-
-/*  */
-.float-left {
-  float: left;
-}
-.float-right {
-  float: right;
-}
-.display-inline-block {
-  display: inline-block;
-}

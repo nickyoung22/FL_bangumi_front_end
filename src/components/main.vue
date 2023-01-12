@@ -7,16 +7,22 @@
       <!-- 这样写，保持不变 -->
       <!-- <Infinite_list :list_data="store[`_${type}_list_data`]"> -->
 
-      <Infinite_list :type="type" :list_data="list_data_filtered_from_store">
+      <Infinite_list
+        :list_data="list_data_filtered_from_store"
+        :initial_render_num="10"
+        :add_render_num="6"
+        @list_updated="list_updated">
         <template v-slot:list_item_component="slot_data">
           <component
             :is="item_component_name"
-            :list_item_data="slot_data.list_item_data"></component>
+            :list_item_data="slot_data.list_item_data"
+            :key="`${slot_data.list_item_data.storeName}`"></component>
         </template>
       </Infinite_list>
     </div>
     <div class="right" ref="right">
       <div class="slide-bar" ref="slideBar"></div>
+      <Basic_sorter></Basic_sorter>
       <Filter_info :type="type"></Filter_info>
       <hr />
       <Tags_filter :type="type" :tags_cssSelector="`.tags_highlight`"></Tags_filter>
@@ -48,9 +54,11 @@
   import Infinite_list from './main_components/infinite_list.vue'
 
   // 侧边栏内的一些组件
-  import Filter_info from './main_components/list_filter_components/filter_info.vue'
-  import Tags_filter from './main_components/list_filter_components/tags_filter.vue'
-  import Field_filter from './main_components/list_filter_components/field_filter.vue'
+  import Filter_info from './main_components/filter_components/filter_info.vue'
+  import Tags_filter from './main_components/filter_components/tags_filter.vue'
+  import Field_filter from './main_components/filter_components/field_filter.vue'
+  import Basic_sorter from './main_components/sorter_components/basic_sorter.vue'
+
   // 侧边栏内的插件
   const _plugins = import.meta.glob('./main_components/plugins_components/*.vue')
   const plugins = {}
@@ -80,6 +88,8 @@
       Tags_filter,
       Field_filter,
 
+      Basic_sorter,
+
       loading_item_component,
 
       ...list_items, // 将所有 列表项组件 以异步组件的形式加载
@@ -106,7 +116,12 @@
           : []
       }
     },
-    methods: {},
+    methods: {
+      list_updated() {
+        // highlight
+        this.store.execute_highlights(this.type)
+      }
+    },
 
     created() {
       this.type = this.$route.params.route2
@@ -154,6 +169,9 @@
     mounted() {
       // 设置横向拖动大小的功能
       main_page_resize_side_bar_fun.call(this)
+    },
+    updated() {
+      console.log('updated -------------------------')
     }
   }
 </script>
@@ -184,6 +202,9 @@
           cursor: e-resize !important;
           background-color: rgb(244, 42, 255);
         }
+        &:active {
+          background-color: rgb(199, 34, 208);
+        }
       }
 
       position: fixed;
@@ -208,10 +229,12 @@
       /* overflow: auto; */
 
       .filter-box,
-      .plugin-box {
+      .plugin-box,
+      .sorter-box {
         border: 2px solid rgba(250, 128, 114, 0.747);
         border-radius: 15px;
-        margin: 3px;
+        margin: 2px;
+        padding-left: 2.8px;
       }
     }
   }

@@ -2,12 +2,30 @@
 @import './initialize.css';
 @import './myanime.css';
 @import './element-ui-modify.css';
+@import './atom-css.less';
 
 body {
   background-color: var(--body-background-color);
   color: var(--body-color-content);
   margin-left: 2.8px;
   margin-right: 2.8px;
+}
+
+#nprogress {
+  --nprogress-color: #00ccff;
+  .bar {
+    height: 6px;
+    top: calc(var(--header-height) - 6px);
+    background-color: var(--nprogress-color);
+  }
+
+  .spinner-icon {
+    width: 55px;
+    height: 55px;
+    border-width: 5px;
+    border-top-color: var(--nprogress-color);
+    border-left-color: var(--nprogress-color);
+  }
 }
 
 .message-success {

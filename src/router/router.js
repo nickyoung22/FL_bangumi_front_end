@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import { useStore } from '@/stores/store.js'
 
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
 const main = () => import('@/components/main.vue')
 
 const RouteLoading = () => import('@/components/function_pages/RouteLoading.vue')
@@ -178,13 +181,26 @@ const router = createRouter({
 
     // 修正滚动行为
     let my_scroll_to = position => {
+      console.log('滚动位置 开始修正')
       if (!position) return
       let timer = setInterval(() => {
         window.scrollTo(0, position.top)
-      }, 20)
+        document.dispatchEvent(
+          new WheelEvent('wheel', {
+            deltaY: 2
+          })
+        )
+
+        if (Math.abs(document.documentElement.scrollTop - position.top) < 5) {
+          console.log('滚动位置 修正完毕 ~~~~')
+          clearInterval(timer)
+          NProgress.done()
+        }
+      }, 8)
       setTimeout(() => {
         clearInterval(timer)
-      }, 300)
+        NProgress.done()
+      }, 800)
     }
 
     const store = useStore()
@@ -210,6 +226,7 @@ router.beforeEach((to, from) => {
   // console.log(`全局前置守卫:   from '${from.path}' to '${to.path}'`)
   // console.log(from)
   // console.log(to)
+  NProgress.start()
 
   const store = useStore()
 

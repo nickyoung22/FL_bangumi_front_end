@@ -160,11 +160,17 @@
     computed: {
       // 需要展示的文件，即 非图片
       file_names_need_show() {
+        if (!this.list_item_data.file_names) {
+          return []
+        }
         return this.list_item_data.file_names.filter(e => this.file_name_need_show(e))
       },
 
       // 不需要展示的文件，即 图片
       file_names_not_need_show() {
+        if (!this.list_item_data.file_names) {
+          return []
+        }
         return this.list_item_data.file_names
           .filter(e => !this.file_name_need_show(e))
           .map(e => e.name)

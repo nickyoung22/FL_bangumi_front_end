@@ -9,7 +9,7 @@ import router from './router/router.js'
 
 import { mixin } from './mixin/mixin.js'
 
-import './assets/main.css'
+import './assets/main.less'
 
 // https://blog.csdn.net/yjl13598765406/article/details/125496865
 import 'default-passive-events'
@@ -23,7 +23,6 @@ const app = createApp(App)
 app.config.globalProperties.$axios = axios
 
 import axios from './utils/axios.js'
-
 
 console.log('app实例:  ', app) //
 

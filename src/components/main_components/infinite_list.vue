@@ -1,18 +1,13 @@
 <template>
   <div class="infinite-list-class">
-    <h2 class="info">
+    <h2 class="info" ref="infoDOM">
       列表已展示{{ render_list_data.length }}/{{ list_data.length }} 条数据，
       <span v-if="more_data_to_render">下滑产生更多数据</span>
       <span v-else>全部已展示~</span>
-      <el-radio-group v-model="store.order_mode" @change="order_change_handler">
-        <el-radio-button label="最新" />
-        <el-radio-button label="最早" />
-        <el-radio-button label="随机" />
-      </el-radio-group>
     </h2>
 
-    <ul>
-      <template v-for="item in render_list_data" :key="`${item.type}--${item.storeName}`">
+    <ul ref="ulDOM">
+      <template v-for="item in render_list_data">
         <slot name="list_item_component" :list_item_data="item"></slot>
       </template>
     </ul>
@@ -20,11 +15,7 @@
     <el-divider />
     <div v-if="more_data_to_render" class="render-more-notify notify">
       <div class="icons">
-        <el-progress
-          :percentage="100"
-          :format="() => `正在加载更多数据...`"
-          :indeterminate="true"
-          :duration="0.8" />
+        <el-progress :percentage="100" :format="() => ``" :indeterminate="true" :duration="0.8" />
       </div>
     </div>
     <div v-else class="render-finished-notify notify">
@@ -45,12 +36,10 @@
       return { store }
     },
 
-    props: ['list_data', 'type'],
+    props: ['list_data', 'initial_render_num', 'add_render_num'],
     data() {
       return {
         ComponentName: 'main.vue  infinite_list.vue',
-        initial_render_num: 10,
-        add_render_num: 6,
         render_num: 0
       }
     },
@@ -93,8 +82,9 @@
         }
         console.log('加载完毕...')
       },
-      scrollHandler: _throttle(function () {
-        // console.log(`滚了~~~~~~~~~~~~`)
+      wheelHandler: _throttle(function (e) {
+        if (e.deltaY < 0) return
+        console.log(`监听到 向下滚了~~~~~~~~~~~~`)
 
         let html = document.documentElement
         // 距离底部的距离
@@ -104,32 +94,32 @@
           console.log('即将滚动到底部')
           this.renderMore()
         }
-      }, 50),
-      reverse() {
-        this.store.list_data_filtered[this.type].reverse()
-      },
-      order_change_handler() {
-        this.store.execute_filters()
-
-        // 从localstorage中
-        // 初始化 顺序设置
-        window.localStorage.setItem('顺序设置', this.store.order_mode)
-      }
+      }, 50)
     },
     created() {
       this.render_num = this.initial_render_num
     },
-    mounted() {},
+    mounted() {
+      // info改为绝对定位
+      const infoDOM = this.$refs.infoDOM
+      const top = infoDOM.offsetTop
+      const left = infoDOM.offsetLeft
+      infoDOM.style.position = 'fixed'
+      infoDOM.style.top = top + 'px'
+      infoDOM.style.left = left + 'px'
+
+      const ulDOM = this.$refs.ulDOM
+      ulDOM.style.marginTop = window.getComputedStyle(infoDOM).height
+    },
     activated() {
-      document.addEventListener('scroll', this.scrollHandler)
+      document.addEventListener('wheel', this.wheelHandler)
     },
     deactivated() {
-      document.removeEventListener('scroll', this.scrollHandler)
+      document.removeEventListener('wheel', this.wheelHandler)
     },
 
     updated() {
-      // highlight
-      this.store.execute_highlights(this.type)
+      this.$emit('list_updated')
     }
   }
 </script>
@@ -137,26 +127,14 @@
 <style lang="less">
   .infinite-list-class {
     .info {
-      position: fixed;
-      left: 2px;
-      top: var(--header-height);
       z-index: 1;
-
-      width: calc(100% - var(--right-sider-width) - 18px);
-
       font-size: calc(var(--body-font-size) * 1.2);
       color: aqua;
       border-bottom: 2px dashed orange;
       background-color: var(--header-background-color);
-
-      .el-radio-group {
-        float: right;
-      }
     }
 
     ul {
-      margin-top: calc(var(--body-font-size) * 1.5 + 10px);
-
       .list-item {
         border-bottom: 0.8px solid #25edff7f;
         margin: 3px;

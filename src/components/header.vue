@@ -19,7 +19,7 @@
   // 导航栏 左边
   import Back from './header_components/back.vue'
   import Logo from './header_components/logo.vue'
-  import Home from './header_components/Home.vue'
+  import Home from './header_components/home.vue'
   // 导航栏 中间
   import RouterLinks from './header_components/routerLinks.vue'
   // 导航栏 右边

@@ -21,33 +21,41 @@
     </div>
 
     <div class="right">
-      <ul class="ul-container">
-        <li v-for="item in render_data" :key="type_now + item.path">
-          <a class="hover-active click-active" @click="handle_click(item)">
-            <File_icon
-              class="icon hover-active"
-              v-bind="{
-                file_obj: item,
-                option: {
-                  tooltip_disabled: true
-                }
-              }"></File_icon>
-            <span>{{ item.name }}</span>
-            <span class="inner-num">{{ item.innerNum }}</span>
-          </a>
-          <div v-if="item.type === 'folder'" class="buttons">
-            <el-button
-              type="primary"
-              @click="add(type_now, item.path)"
-              :disabled="item.name.startsWith('#')">
-              添加
-            </el-button>
-            <el-button type="info" @click="open(type_now, ...pathStr_2_pathArr(item.path))">
-              打开
-            </el-button>
-          </div>
-        </li>
-      </ul>
+      <Infinite_list
+        class="ul-container"
+        :list_data="render_data"
+        :initial_render_num="30"
+        :add_render_num="18">
+        <template v-slot:list_item_component="slot_data">
+          <li :key="slot_data.list_item_data.path">
+            <a class="hover-active click-active" @click="handle_click(slot_data.list_item_data)">
+              <File_icon
+                class="icon hover-active"
+                v-bind="{
+                  file_obj: slot_data.list_item_data,
+                  option: {
+                    tooltip_disabled: true
+                  }
+                }"></File_icon>
+              <span>{{ slot_data.list_item_data.name }}</span>
+              <span class="inner-num">{{ slot_data.list_item_data.innerNum }}</span>
+            </a>
+            <div v-if="slot_data.list_item_data.type === 'folder'" class="buttons">
+              <el-button
+                type="primary"
+                @click="add(type_now, slot_data.list_item_data.path)"
+                :disabled="slot_data.list_item_data.name.startsWith('#')">
+                添加
+              </el-button>
+              <el-button
+                type="info"
+                @click="open(type_now, ...pathStr_2_pathArr(slot_data.list_item_data.path))">
+                打开
+              </el-button>
+            </div>
+          </li>
+        </template>
+      </Infinite_list>
     </div>
   </div>
 </template>
@@ -57,6 +65,9 @@
 
   import File_icon from '@/components/small_components/file_icon.vue'
 
+  // 无限列表组件
+  import Infinite_list from '../main_components/infinite_list.vue'
+
   export default {
     setup() {
       const store = useStore()
@@ -64,7 +75,8 @@
     },
 
     components: {
-      File_icon
+      File_icon,
+      Infinite_list
     },
     data() {
       return {
@@ -138,6 +150,7 @@
         () => this.$route.query,
         () => {
           if (!this.$route.query.storePath) {
+            this.render_data = []
             return
           }
 
@@ -154,13 +167,21 @@
             })
             .then(r => {
               this.render_data = r
+
+              console.log('数据请求完毕')
+              // 加载状态反馈
+              this.$nextTick(() => {
+                console.log('列表dom渲染完毕')
+              })
             })
         },
         {
           immediate: true
         }
       )
-    }
+    },
+
+    updated() {}
   }
 </script>
 
@@ -232,6 +253,18 @@
             top: 2%;
             right: 2%;
             display: none;
+          }
+        }
+
+        // 调整加载状态反馈框的位置
+        :deep(.el-loading-mask) {
+          z-index: 1;
+
+          .el-loading-spinner {
+            position: fixed;
+            width: calc(100% - var(--left-width));
+            right: 0;
+            top: 50%;
           }
         }
       }
