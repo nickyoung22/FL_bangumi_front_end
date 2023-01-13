@@ -136,7 +136,7 @@
 <script>
   import { useStore } from '@/stores/store.js'
   import File_icon from '@/components/small_components/file_icon.vue'
-  import IMG_LOAD_ERROR from '@/myPictures/other/图片加载失败.png'
+  import IMG_LOAD_ERROR from '@/assets/myPictures/other/图片加载失败.png'
 
   export default {
     setup() {

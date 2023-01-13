@@ -12,23 +12,23 @@
 <script>
   // 文件
   // // 网页文件
-  import twitter from '@/myPictures/web-icons/twitter.png'
-  import youtube from '@/myPictures/web-icons/youtube.png'
-  import instagram from '@/myPictures/web-icons/instagram.png'
-  import bilibili from '@/myPictures/web-icons/bilibili2.png'
-  import exhentai from '@/myPictures/web-icons/exhentai.png'
+  import twitter from '@/assets/myPictures/web-icons/twitter.png'
+  import youtube from '@/assets/myPictures/web-icons/youtube.png'
+  import instagram from '@/assets/myPictures/web-icons/instagram.png'
+  import bilibili from '@/assets/myPictures/web-icons/bilibili2.png'
+  import exhentai from '@/assets/myPictures/web-icons/exhentai.png'
 
-  import internet_web from '@/myPictures/web-icons/internet_web.png'
+  import internet_web from '@/assets/myPictures/web-icons/internet_web.png'
   // // 图片文件
-  import picture from '@/myPictures/web-icons/picture.png'
+  import picture from '@/assets/myPictures/web-icons/picture.png'
   // // 视频文件
-  import video from '@/myPictures/web-icons/video.png'
+  import video from '@/assets/myPictures/web-icons/video.png'
   // // excel文件
-  import excel from '@/myPictures/web-icons/excel.png'
+  import excel from '@/assets/myPictures/web-icons/excel.png'
   // // 未知文件
-  import file from '@/myPictures/web-icons/file.png'
+  import file from '@/assets/myPictures/web-icons/file.png'
   // 文件夹
-  import folder from '@/myPictures/web-icons/folder.png'
+  import folder from '@/assets/myPictures/web-icons/folder.png'
 
   export default {
     props: {

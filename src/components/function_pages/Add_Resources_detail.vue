@@ -269,7 +269,7 @@
 
     &.empty {
       opacity: 0.8;
-      background-color: rgba(255, 247, 0, 0.268);
+      background: linear-gradient(60deg, #cc00ff3d, #24a0ff71 120%);
     }
   }
 

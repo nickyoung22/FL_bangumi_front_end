@@ -2,14 +2,16 @@
   import { ref, watch } from 'vue'
   import { useRouter, useRoute } from 'vue-router'
   import { useStore } from '@/stores/store.js'
-
-  import Header from './components/header.vue'
+  import { defineAsyncComponent } from 'vue'
 
   import modify_console_log from '@/utils/modify_console_log.js'
   import _throttle from '@/utils/_throttle.js'
 
   const store = useStore()
   const route = useRoute()
+
+  // header组件 以异步形式
+  const Header = defineAsyncComponent(() => import('./components/header.vue'))
 
   // 改写console.log方法，使其带时间显示
   // modify_console_log()

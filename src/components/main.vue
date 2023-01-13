@@ -53,7 +53,7 @@
   // 无限列表组件
   import Infinite_list from './main_components/infinite_list.vue'
 
-  // 侧边栏内的一些组件
+  // 侧边栏内的一些组件 
   import Filter_info from './main_components/filter_components/filter_info.vue'
   import Tags_filter from './main_components/filter_components/tags_filter.vue'
   import Field_filter from './main_components/filter_components/field_filter.vue'

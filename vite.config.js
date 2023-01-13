@@ -3,10 +3,15 @@ import path from 'path'
 import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
+import { splitVendorChunkPlugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 // element-ui plus
 // 实现自动按需引入的插件
+// https://juejin.cn/post/7012446423367024676
+// https://github.com/antfu/unplugin-auto-import
+// https://github.com/antfu/unplugin-vue-components
+// https://github.com/antfu/unplugin-icons#auto-importing
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
@@ -29,6 +34,11 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   plugins: [
     vue(),
+
+    // 这是以前的默认拆包策略，现在不采用。（现在是以异步组件为分割点）
+    // https://juejin.cn/post/7135671174893142030
+    // splitVendorChunkPlugin(),
+
     // VitePWA(),
     Inspect(),
     // 自动导入相关
@@ -36,14 +46,14 @@ export default defineConfig({
       dts: true, // 会自动生成 配置文件 auto-imports.d.ts
 
       resolvers: [
-        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox...
-        ElementPlusResolver(),
+        // 自动导入 Element Plus 相关函数 及其样式，如：ElMessage, ElMessageBox...
+        ElementPlusResolver()
 
         // Auto import icon components
         // 自动导入图标组件
-        IconsResolver({
-          prefix: 'Icon'
-        })
+        // IconsResolver({
+        //   prefix: 'Icon'
+        // })
       ]
     }),
     Components({
@@ -54,7 +64,7 @@ export default defineConfig({
       dirs: [],
 
       resolvers: [
-        // 自动导入 Element Plus 组件
+        // 自动导入 Element Plus 组件 及其样式
         ElementPlusResolver(),
 
         // Auto register icon components
@@ -96,13 +106,14 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
+        // https://cn.vitejs.dev/guide/build.html#chunking-strategy
         // manualChunks: {
         //   'element-plus-Chunk': ['element-plus']
         // }
         // manualChunks(id) {
-        //   if (id.includes('FL_bangumi_front_end/src/components/main_components')) {
-        //     console.log(id)
-        //     return 'main_components-Chunk'
+        //   if (id.includes('element-plus')) {
+        //     // console.log(id)
+        //     return 'element-plus-Chunk'
         //   }
         // },
         entryFileNames: 'assets/[name]-[hash].js',
@@ -155,10 +166,10 @@ export default defineConfig({
       }
     },
 
-    minify: 'esbuild', // 默认
+    minify: 'esbuild' // 默认
 
     // https://cn.vitejs.dev/config/build-options.html#build-sourcemap
-    sourcemap: true
+    // sourcemap: true
   },
 
   // vite 构建移除 console https://www.cnblogs.com/guangzan/p/16633753.html

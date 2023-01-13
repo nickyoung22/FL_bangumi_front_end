@@ -202,16 +202,23 @@
       width: var(--left-width);
       position: fixed;
 
-      ul {
-        :deep(div.el-sub-menu__title) {
-          font-size: calc(var(--body-font-size) * 1.2);
-          font-weight: 660;
-          border-bottom: 3px solid var(--a-color);
-        }
+      :deep(.el-menu) {
+        .el-sub-menu {
+          .el-sub-menu__title {
+            font-size: calc(var(--body-font-size) * 1.2);
+            font-weight: 660;
+            border-bottom: 3px solid var(--a-color);
 
-        :deep(.el-menu-item) {
-          font-size: var(--body-font-size);
-          border-bottom: 1px solid #ffffff63;
+            .el-icon {
+              font-size: calc(var(--body-font-size) * 1.2);
+              font-weight: 600;
+            }
+          }
+
+          .el-menu-item {
+            font-size: var(--body-font-size);
+            border-bottom: 1px solid #ffffff63;
+          }
         }
       }
     }

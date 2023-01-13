@@ -30,12 +30,12 @@
             :percentage="100"
             :format="() => `${ErrorMsg}`" />
         </div>
-        <ul v-show="this.search_text.trim() !== ''" class="result">
-          <li class="item result-info">
+        <div v-show="this.search_text.trim() !== ''" class="result">
+          <div class="item result-info">
             共
             <span class="num">{{ resultList.length }}</span>
             条搜索结果
-          </li>
+          </div>
           <Infinite_list
             class="result-list"
             scroll_mode="box"
@@ -50,7 +50,7 @@
                 :key="`${slot_data.list_item_data.storeName}`"></component>
             </template>
           </Infinite_list>
-        </ul>
+        </div>
       </div>
     </Transition>
 
