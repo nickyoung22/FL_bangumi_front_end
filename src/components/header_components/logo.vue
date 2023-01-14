@@ -21,12 +21,11 @@
 
 <style scoped lang="less">
   .logo {
-    width: calc(var(--header-height) - 2px);
-    min-width: calc(var(--min-header-height) - 2px);
-    height: calc(var(--header-height) - 2px);
-    min-height: calc(var(--min-header-height) - 2px);
-
-    background: linear-gradient(to right, #d100bc, #00abda);
+    width: calc(var(--header-height) - 6px);
+    // min-width: calc(var(--min-header-height) - 6px);
+    height: calc(var(--header-height) - 6px);
+    // min-height: calc(var(--min-header-height) - 6px);
+    background: -webkit-linear-gradient(315deg, #d100bc 18%, #00abda);
     border-radius: 0.6rem;
     transition: all 0.3s;
 

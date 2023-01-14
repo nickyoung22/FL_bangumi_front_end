@@ -13,14 +13,21 @@ body {
 
 @import 'nprogress/nprogress.css';
 #nprogress {
+  --nprogress-color-initial: #ff00e6;
   --nprogress-color: #00ccff;
   .bar {
     height: 6px;
     top: calc(var(--header-height) - 6px);
-    background-color: var(--nprogress-color);
+
+    background: -webkit-linear-gradient(
+      315deg,
+      var(--nprogress-color-initial),
+      var(--nprogress-color)
+    );
   }
 
   .spinner-icon {
+    display: none;
     width: 55px;
     height: 55px;
     border-width: 5px;
