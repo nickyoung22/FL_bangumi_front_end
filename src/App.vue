@@ -102,6 +102,12 @@
       store.order_mode = '最新'
     }
   })()
+
+  // 设置网页logo
+  ;(function () {
+    console.log(document.querySelector('link[rel="icon"]'))
+    document.querySelector('link[rel="icon"]').href = '/' + import.meta.env.VITE_APP_LOGO
+  })()
 </script>
 
 <template>

@@ -148,25 +148,25 @@
 
       ulDOM.style.marginTop = window.getComputedStyle(infoDOM).height
 
-      console.log(`!!!!!!!!!!!!!!!!!!! 绑定`)
-      console.log(this.containerDOM_bind)
-      console.log(this.wheelHandler)
+      // console.log(`!!!!!!!!!!!!!!!!!!! 绑定`)
+      // console.log(this.containerDOM_bind)
+      // console.log(this.wheelHandler)
       this.containerDOM_bind.addEventListener('wheel', this.wheelHandler)
     },
     activated() {
       if (this.scroll_mode !== 'box') {
-        console.log(`!!!!!!!!!!!!!!!!!!! 绑定`)
-        console.log(this.containerDOM_bind)
-        console.log(this.wheelHandler)
+        // console.log(`!!!!!!!!!!!!!!!!!!! 绑定`)
+        // console.log(this.containerDOM_bind)
+        // console.log(this.wheelHandler)
         this.containerDOM_bind.addEventListener('wheel', this.wheelHandler)
       }
     },
     deactivated() {
-      console.log(` 解绑`)
+      // console.log(` 解绑`)
       this.containerDOM_bind.removeEventListener('wheel', this.wheelHandler)
     },
     unmounted() {
-      console.log(` 解绑`)
+      // console.log(` 解绑`)
       this.containerDOM_bind.removeEventListener('wheel', this.wheelHandler)
     },
     updated() {
