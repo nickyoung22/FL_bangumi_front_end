@@ -9,13 +9,12 @@ import router from './router/router.js'
 
 import { mixin } from './mixin/mixin.js'
 
+// element-ui 暗黑模式
+import 'element-plus/theme-chalk/dark/css-vars.css'
 import './assets/main.less'
 
 // https://blog.csdn.net/yjl13598765406/article/details/125496865
-import 'default-passive-events'
-
-// element-ui 暗黑模式
-import 'element-plus/theme-chalk/dark/css-vars.css'
+// import 'default-passive-events'
 
 const pinia = createPinia()
 const app = createApp(App)

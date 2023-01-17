@@ -40,15 +40,22 @@ export default defineConfig({
     // splitVendorChunkPlugin(),
 
     // VitePWA(),
+
     Inspect(),
+
     // 自动导入相关
     AutoImport({
       dts: true, // 会自动生成 配置文件 auto-imports.d.ts
 
+      imports: [
+        // {
+        //   'naive-ui': ['useDialog', 'useMessage', 'useNotification', 'useLoadingBar']
+        // }
+      ],
+
       resolvers: [
         // 自动导入 Element Plus 相关函数 及其样式，如：ElMessage, ElMessageBox...
         ElementPlusResolver()
-
         // Auto import icon components
         // 自动导入图标组件
         // IconsResolver({
@@ -59,7 +66,7 @@ export default defineConfig({
     Components({
       dts: true, // 会自动生成 配置文件 components.d.ts
 
-      // 指定自动导入的组件位置,默认是 dirs: ['src/components'],
+      // 指定被自动导入的组件位置,默认是 dirs: ['src/components'],
       // 默认的配置，会使得自己的组件也被自动引入，而我们只想自动引入第三方组件库(elementplus)的组件
       dirs: [],
 

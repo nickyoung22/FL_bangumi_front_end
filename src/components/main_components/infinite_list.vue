@@ -55,7 +55,11 @@
         ComponentName: 'main.vue  infinite_list.vue',
         render_num: 0,
         containerDOM: null,
-        containerDOM_bind: null
+        containerDOM_bind: null,
+
+        // 使用 passive 改善滚屏性能
+        // https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener#%E4%BD%BF%E7%94%A8_passive_%E6%94%B9%E5%96%84%E6%BB%9A%E5%B1%8F%E6%80%A7%E8%83%BD
+        passiveIfSupported: null
       }
     },
     computed: {
@@ -116,6 +120,19 @@
     },
     created() {
       this.render_num = this.initial_render_num
+
+      try {
+        window.addEventListener(
+          'test',
+          null,
+          Object.defineProperty({}, 'passive', {
+            get: () => {
+              // 注意this 用箭头函数
+              this.passiveIfSupported = { passive: true }
+            }
+          })
+        )
+      } catch (err) {}
     },
     mounted() {
       const infoDOM = this.$refs.infoDOM
@@ -151,14 +168,14 @@
       // console.log(`!!!!!!!!!!!!!!!!!!! 绑定`)
       // console.log(this.containerDOM_bind)
       // console.log(this.wheelHandler)
-      this.containerDOM_bind.addEventListener('wheel', this.wheelHandler)
+      this.containerDOM_bind.addEventListener('wheel', this.wheelHandler, this.passiveIfSupported)
     },
     activated() {
       if (this.scroll_mode !== 'box') {
         // console.log(`!!!!!!!!!!!!!!!!!!! 绑定`)
         // console.log(this.containerDOM_bind)
         // console.log(this.wheelHandler)
-        this.containerDOM_bind.addEventListener('wheel', this.wheelHandler)
+        this.containerDOM_bind.addEventListener('wheel', this.wheelHandler, this.passiveIfSupported)
       }
     },
     deactivated() {

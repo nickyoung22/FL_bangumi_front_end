@@ -7,6 +7,7 @@
   import modify_console_log from '@/utils/modify_console_log.js'
   import _throttle from '@/utils/_throttle.js'
 
+
   const store = useStore()
   const route = useRoute()
 
@@ -105,28 +106,29 @@
 
   // 设置网页logo
   ;(function () {
-    console.log(document.querySelector('link[rel="icon"]'))
     document.querySelector('link[rel="icon"]').href = '/' + import.meta.env.VITE_APP_LOGO
   })()
 </script>
 
 <template>
-  <Header v-if="!full_screen"></Header>
-  <router-view
-    class="container-wrapper"
-    :class="{ 'full-screen': full_screen }"
-    v-slot="{ Component }">
-    <!-- 这里强制：相同路由 也不复用 -->
-    <keep-alive
-      :exclude="[
-        'NotFoundPage_name_for_keep-alive_exclude',
-        'Add_Resources_detail_name_for_keep-alive_exclude',
-        'chnMangaReader',
-        'RouteLoading_name_for_keep-alive_exclude'
-      ]">
-      <component :is="Component" :key="$route.path" />
-    </keep-alive>
-  </router-view>
+  <n-config-provider :theme="darkTheme">
+    <Header v-if="!full_screen"></Header>
+    <router-view
+      class="container-wrapper"
+      :class="{ 'full-screen': full_screen }"
+      v-slot="{ Component }">
+      <!-- 这里强制：相同路由 也不复用 -->
+      <keep-alive
+        :exclude="[
+          'NotFoundPage_name_for_keep-alive_exclude',
+          'Add_Resources_detail_name_for_keep-alive_exclude',
+          'chnMangaReader',
+          'RouteLoading_name_for_keep-alive_exclude'
+        ]">
+        <component :is="Component" :key="$route.path" />
+      </keep-alive>
+    </router-view>
+  </n-config-provider>
 </template>
 
 <style scoped>
