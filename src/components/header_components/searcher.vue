@@ -278,6 +278,7 @@
 
     .input-and-result {
       position: absolute;
+      z-index: 222;
       right: 100%;
       margin-right: 2px;
       top: calc(var(--header-height) * 0.02);
@@ -285,7 +286,7 @@
       height: 100%;
       width: 60vw;
 
-      background-color: transparent;
+      background-color: #2f2f2f;
 
       font-size: calc(var(--search-font-size) * 0.8);
 
@@ -299,7 +300,13 @@
           padding-left: 12px;
         }
       }
-
+      .progress-bars {
+        position: absolute;
+        width: 100%;
+        height: 3px;
+        z-index: 2;
+        transform: translateY(-10px);
+      }
       .result {
         background-color: #181818;
         border: 5px solid rgb(255, 119, 0);
