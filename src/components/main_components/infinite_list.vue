@@ -8,7 +8,7 @@
 
     <ul ref="ulDOM">
       <template v-for="item in render_list_data">
-        <slot name="list_item_component" :list_item_data="item"></slot>
+        <slot :list_item_data="item"></slot>
       </template>
     </ul>
 

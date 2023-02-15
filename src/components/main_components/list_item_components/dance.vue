@@ -65,12 +65,14 @@
             v-if="
               file.type === 'file' &&
               /.url$/.test(file.name) &&
-              (/youtube\.com/.test(file.content) || /bilibili\.com/.test(file.content))
+              (/youtube\.com\/watch\?v=/.test(file.content) || /bilibili\.com/.test(file.content))
             ">
             <template v-if="/youtube\.com/.test(file.content)">
               <div class="embed-video-box">
                 <iframe
-                  :src="`https://www.youtube.com/embed/${file.content.match(/watch\?v=([-\w]+)/)[1]}`"
+                  :src="`https://www.youtube.com/embed/${
+                    file.content.match(/watch\?v=([-\w]+)/)[1]
+                  }`"
                   frameborder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowfullscreen></iframe>

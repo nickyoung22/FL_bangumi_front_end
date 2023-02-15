@@ -227,7 +227,9 @@
     },
 
     created() {},
-    mounted() {}
+    mounted() {
+      console.log(222, '\n', this._.vnode)
+    }
   }
 </script>
 

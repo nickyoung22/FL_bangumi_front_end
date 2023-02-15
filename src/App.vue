@@ -18,7 +18,7 @@
 
   // websocket连接 判断服务器是否持续正在正常运行
   ;(() => {
-    let ws = new WebSocket(store.api_server.replace('http', 'ws') + '/socket/connect')
+    let ws = new WebSocket(store.api_server.replace('http', 'ws') + '/socket/connect_heartbeat')
     ws.onopen = () => {
       ws.send('hello server')
       setInterval(() => {
@@ -120,7 +120,6 @@
       :exclude="[
         'NotFoundPage_name_for_keep-alive_exclude',
         'Add_Resources_detail_name_for_keep-alive_exclude',
-        'chnMangaReader',
         'RouteLoading_name_for_keep-alive_exclude'
       ]">
       <component :is="Component" :key="$route.path" />

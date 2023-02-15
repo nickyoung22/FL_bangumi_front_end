@@ -12,11 +12,11 @@
         :initial_render_num="10"
         :add_render_num="6"
         @list_updated="list_updated">
-        <template v-slot:list_item_component="slot_data">
+        <template v-slot="{ list_item_data }">
           <component
             :is="item_component_name"
-            :list_item_data="slot_data.list_item_data"
-            :key="`${slot_data.list_item_data.storeName}`"></component>
+            :list_item_data="list_item_data"
+            :key="`${list_item_data.storeName}`"></component>
         </template>
       </Infinite_list>
     </div>

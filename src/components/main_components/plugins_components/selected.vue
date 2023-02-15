@@ -35,16 +35,6 @@
           </template>
         </el-popconfirm>
       </div>
-      <hr />
-      <div class="other">
-        <!-- 仅舞蹈出现的功能 -->
-        <div v-if="type === '3CY_dance'">
-          <el-button type="primary" @click="generate_playlist('all')">生成总表 playlist</el-button>
-          <el-button type="warning" @click="generate_playlist('temp')">
-            生成临时表 playlist
-          </el-button>
-        </div>
-      </div>
     </div>
 
     <div v-show="show" @click="show = false" class="fold-triangle"></div>
@@ -142,17 +132,6 @@
           .catch(err => {
             this.alert_error('清空失败')
           })
-      },
-
-      generate_playlist(operation) {
-        this.$axios
-          .get(this.store.api_server + `/generate_playlist/${this.type}/${operation}`)
-          .then(() => {
-            this.alert_success('生成list成功')
-          })
-          .catch(err => {
-            this.alert_error('生成list失败')
-          })
       }
     },
 
@@ -208,9 +187,6 @@
             }
           }
         }
-      }
-
-      .other {
       }
     }
 

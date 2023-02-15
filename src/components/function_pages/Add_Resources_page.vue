@@ -27,30 +27,30 @@
         :list_data="render_data"
         :initial_render_num="30"
         :add_render_num="18">
-        <template v-slot:list_item_component="slot_data">
-          <li :key="slot_data.list_item_data.path">
-            <a class="hover-active click-active" @click="handle_click(slot_data.list_item_data)">
+        <template v-slot="{ list_item_data }">
+          <li :key="list_item_data.path">
+            <a class="hover-active click-active" @click="handle_click(list_item_data)">
               <File_icon
-                class="icon hover-active"
+                class="icon"
                 v-bind="{
-                  file_obj: slot_data.list_item_data,
+                  file_obj: list_item_data,
                   option: {
                     tooltip_disabled: true
                   }
                 }"></File_icon>
-              <span>{{ slot_data.list_item_data.name }}</span>
-              <span class="inner-num">{{ slot_data.list_item_data.innerNum }}</span>
+              <span>{{ list_item_data.name }}</span>
+              <span class="inner-num">{{ list_item_data.innerNum }}</span>
             </a>
-            <div v-if="slot_data.list_item_data.type === 'folder'" class="buttons">
+            <div v-if="list_item_data.type === 'folder'" class="buttons">
               <el-button
                 type="primary"
-                @click="add(type_now, slot_data.list_item_data.path)"
-                :disabled="slot_data.list_item_data.name.startsWith('#')">
+                @click="add(type_now, list_item_data.path)"
+                :disabled="list_item_data.name.startsWith('#')">
                 添加
               </el-button>
               <el-button
                 type="info"
-                @click="open(type_now, ...pathStr_2_pathArr(slot_data.list_item_data.path))">
+                @click="open(type_now, ...pathStr_2_pathArr(list_item_data.path))">
                 打开
               </el-button>
             </div>
@@ -172,7 +172,7 @@
             .then(r => {
               this.render_data = r
 
-              console.log('数据请求完毕')
+              console.log('toadd 数据请求完毕')
               // 加载状态反馈
               this.$nextTick(() => {
                 console.log('列表dom渲染完毕')
@@ -263,7 +263,7 @@
             position: absolute;
             top: 2%;
             right: 2%;
-            display: none;
+            display: none; // button直到hover时才显示
           }
         }
 

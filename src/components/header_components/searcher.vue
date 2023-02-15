@@ -43,11 +43,11 @@
             :initial_render_num="10"
             :add_render_num="6"
             @list_updated="list_updated_handler">
-            <template v-slot:list_item_component="slot_data">
+            <template v-slot="{ list_item_data }">
               <component
-                :is="get_type_list_item_component(slot_data.list_item_data.type)"
-                :list_item_data="slot_data.list_item_data"
-                :key="`${slot_data.list_item_data.storeName}`"></component>
+                :is="get_type_list_item_component(list_item_data.type)"
+                :list_item_data="list_item_data"
+                :key="`${list_item_data.storeName}`"></component>
             </template>
           </Infinite_list>
         </div>
@@ -158,7 +158,9 @@
               .replaceAll('*', '\\*')
               .replaceAll('?', '\\?') +
             ')',
-          'gi'
+          'i'
+          // 解决js相同的正则多次调用test()返回的值却不同的问题
+          // https://www.jb51.net/article/148529.htm
         )
 
         this.reg = reg
@@ -173,7 +175,7 @@
             let { list_data: list_data_all } = this.store
             for (let type of Object.keys(list_data_all)) {
               let list_data_type = list_data_all[type]
-              list_data_type.forEach(data_obj => {
+              for (let data_obj of list_data_type) {
                 let TEXT = ''
                 for (let key of Object.keys(data_obj)) {
                   // 只搜索 name other_name
@@ -183,10 +185,18 @@
                   }\n`
                 }
 
+                if (TEXT.includes('屈辱')) {
+                  console.log('TEXT:  ', TEXT)
+                  console.log('reg:  ', reg)
+                  console.log('reg.test(TEXT):  ', reg.test(TEXT))
+                  console.log('======================================')
+                }
+
                 if (reg.test(TEXT)) {
                   result.push(data_obj)
+                  console.log('result: ', result)
                 }
-              })
+              }
             }
 
             // console.log(result)

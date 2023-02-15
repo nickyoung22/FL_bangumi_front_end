@@ -5,7 +5,7 @@
     :placement="option_.tooltip_direction"
     :hide-after="0"
     :disabled="option_.tooltip_disabled">
-    <img v-bind="$attrs" @click="deliverClick" :src="src" draggable="false" />
+    <img v-bind="$attrs" :src="src" draggable="false" />
   </el-tooltip>
 </template>
 
@@ -36,7 +36,7 @@
         type: Object
         // default: {
         //   name: '文件的名字',
-        //   type: 'file/folder',
+        //   type: 'file or folder',
         //   content:'www.abc.com'
         // }
       },
@@ -45,25 +45,26 @@
       }
     },
 
-    emits: ['click'],
+    created() {
+      this.option_ = {
+        // 默认值
+        ...this.option_,
+        ...this.option
+      }
+    },
+
     data() {
       return {
         // ComponentName: 'small_components  url_icon',
+        option_: {
+          // 默认值
+          tooltip_direction: 'left-end',
+          tooltip_disabled: false,
+          tooltip_appoint: undefined
+        }
       }
     },
     computed: {
-      option_() {
-        return Object.assign(
-          // option 中各选项的额
-          {
-            tooltip_direction: 'left-end',
-            tooltip_disabled: false,
-            tooltip_appoint: undefined
-          },
-          this.option
-        )
-      },
-
       src() {
         let { name, type } = this.file_obj
         // 如果是文件
@@ -115,11 +116,6 @@
         } else {
           throw new Error('file_icon 组件: 未知文件类型')
         }
-      }
-    },
-    methods: {
-      deliverClick() {
-        this.$emit('click')
       }
     }
   }
