@@ -21,17 +21,7 @@
     </div>
     <div class="prev-box-wrapper">
       <div class="prev-box">
-        <img
-          class="hover-active"
-          v-bind:src="
-            store.api_server +
-            '/static/' +
-            list_item_data.type +
-            '/' +
-            encodeURIComponent(list_item_data.storeName + '/cover.jpg')
-          "
-          @error="handle_cover_img_error" />
-
+        <!-- hots -->
         <template v-for="hot_item in list_item_data.hots">
           <template
             v-if="
@@ -68,10 +58,57 @@
               " />
           </template>
         </template>
+
+        <hr />
+
+        <!-- files -->
+        <template v-for="file_item in list_item_data.file_names">
+          <template
+            v-if="
+              file_item.name.includes('.mp4') ||
+              file_item.name.includes('.MP4') ||
+              file_item.name.includes('.mkv')
+            ">
+            <video
+              class="hover-active"
+              controls
+              controlsList="nodownload"
+              disablePictureInPicture="true">
+              <source
+                v-bind:src="
+                  store.api_server +
+                  '/static/' +
+                  list_item_data.type +
+                  '/' +
+                  encodeURIComponent(list_item_data.storeName + '/' + file_item.name)
+                " />
+              您的浏览器不支持 video 标签。
+            </video>
+          </template>
+          <template
+            v-if="
+              file_item.name.includes('.jpg') ||
+              file_item.name.includes('.jpeg') ||
+              file_item.name.includes('.png')
+            ">
+            <img
+              class="hover-active"
+              v-bind:src="
+                store.api_server +
+                '/static/' +
+                list_item_data.type +
+                '/' +
+                encodeURIComponent(list_item_data.storeName + '/' + file_item.name)
+              " />
+          </template>
+        </template>
+
+        
       </div>
       <div class="info-box">
         <div class="filenames-box-wrapper clearfix">
           <div class="filenames-box float-right">
+            <!-- files-icons -->
             <template v-for="file in list_item_data.file_names">
               <File_icon
                 @click="open(list_item_data.type, list_item_data.storeName, file.name)"

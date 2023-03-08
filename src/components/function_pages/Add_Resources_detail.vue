@@ -154,7 +154,17 @@
 
     methods: {
       submit() {
-        this.$axios.post(this.store.api_server + `/${this.operation}`, this.final_data).then(() => {
+        let submitData = null
+        if (this.operation === 'addMany') {
+          submitData = {
+            commonData: this.final_data,
+            list: this.store.temp_data.toAddMany
+          }
+        } else {
+          submitData = this.final_data
+        }
+
+        this.$axios.post(this.store.api_server + `/${this.operation}`, submitData).then(() => {
           this.store.get_list_data(this.final_data.type, false).then(() => {
             //提交之后 请求新数据 得到新数据之后 再返回
             console.log('已经得到了新数据~~  即将返回资源展示页')
@@ -204,8 +214,8 @@
       this.$axios.get(this.store.api_server + '/format/' + this.$route.params.type).then(res => {
         this.format = res
 
-        // format --> 如果是 add ，那么就 依照  各字段的默认值 ，进行初始化各字段value
-        if (this.operation === 'add') {
+        // format --> 如果是 add / addMany ，那么就 依照  各字段的默认值 ，进行初始化各字段value
+        if (this.operation === 'add' || this.operation === 'addMany') {
           this.format.forEach(e => {
             switch (e.type) {
               case 'String':
@@ -228,16 +238,24 @@
             if (e.name === 'type') {
               e.value = this.$route.params.type
             } else if (e.name === 'name') {
-              // 默认名字 ：storeName的后两块的组合
-              let storeName_arr = this.$route.params.storeName.slice(1).split('\\')
-              if (storeName_arr.length === 1) {
-                e.value = storeName_arr[0]
+              if (this.operation === 'addMany') {
+                e.value = '批量添加时，系统默认'
               } else {
-                let len = storeName_arr.length
-                e.value = storeName_arr[len - 2] + ' > ' + storeName_arr[len - 1]
+                // 默认名字 ：storeName的后两块的组合
+                let storeName_arr = this.$route.params.storeName.slice(1).split('\\')
+                if (storeName_arr.length === 1) {
+                  e.value = storeName_arr[0]
+                } else {
+                  let len = storeName_arr.length
+                  e.value = storeName_arr[len - 2] + ' > ' + storeName_arr[len - 1]
+                }
               }
             } else if (e.name === 'storeName') {
-              e.value = this.$route.params.storeName
+              if (this.operation === 'addMany') {
+                e.value = '批量添加时，系统默认'
+              } else {
+                e.value = this.$route.params.storeName
+              }
             }
           })
         }

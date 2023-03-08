@@ -21,6 +21,25 @@
     </div>
 
     <div class="right">
+      <div class="add-many">
+        <el-switch v-model="isAddMany" size="large" active-text="批量添加" />
+
+        <template v-if="isAddMany">
+          <div class="float-right">
+            已选中
+            <span>{{ store.temp_data.toAddMany ? store.temp_data.toAddMany.length : 0 }}</span>
+            项
+            <el-button
+              type="primary"
+              :disabled="!store.temp_data.toAddMany || store.temp_data.toAddMany.length === 0"
+              @click="addMany(type_now)">
+              添加所选中的项
+            </el-button>
+            <el-button type="warning" @click="selectAll">全选</el-button>
+            <el-button type="info" @click="clearSelectedAll">清空</el-button>
+          </div>
+        </template>
+      </div>
       <Infinite_list
         v-if="list_show"
         class="ul-container"
@@ -29,6 +48,19 @@
         :add_render_num="18">
         <template v-slot="{ list_item_data }">
           <li :key="list_item_data.path">
+            <template v-if="isAddMany">
+              <el-button
+                class="add-many-select-button"
+                :type="
+                  store.temp_data.toAddMany &&
+                  store.temp_data.toAddMany.includes(list_item_data.path)
+                    ? 'primary'
+                    : 'info'
+                "
+                circle
+                size="small"
+                @click="addToManyList(list_item_data.path)" />
+            </template>
             <a class="hover-active click-active" @click="handle_click(list_item_data)">
               <File_icon
                 class="icon"
@@ -86,6 +118,8 @@
         routes: this.store.temp_data.routes,
         list_show: false,
 
+        isAddMany: false,
+
         type_now: '',
         path_now: [],
         render_data: []
@@ -139,6 +173,33 @@
           params: { type, storeName, operation: 'add' }
         })
       },
+      addMany(type) {
+        this.$router.push({
+          name: 'Add_Resources_detail',
+          params: { type, storeName: '  ', operation: 'addMany' }
+        })
+      },
+
+      addToManyList(storePath) {
+        if (!this.store.temp_data.toAddMany) {
+          this.store.temp_data.toAddMany = []
+        }
+
+        if (!this.store.temp_data.toAddMany.includes(storePath)) {
+          this.store.temp_data.toAddMany.push(storePath)
+        } else {
+          let index = this.store.temp_data.toAddMany.indexOf(storePath)
+          this.store.temp_data.toAddMany.splice(index, 1)
+        }
+      },
+
+      selectAll() {
+        this.store.temp_data.toAddMany = this.render_data.map(e => e.path)
+      },
+      clearSelectedAll() {
+        this.store.temp_data.toAddMany = []
+      },
+
       pathStr_2_pathArr(pathStr) {
         return pathStr === '/' ? [] : pathStr.slice(1).split('/')
       },
@@ -151,6 +212,11 @@
       this.$watch(
         () => this.$route.query,
         () => {
+          // 除了进入资源详情页 其他都清空
+          if (this.$route.meta.name !== '资源详情页') {
+            this.store.temp_data.toAddMany = []
+          }
+
           if (!this.$route.query.storePath) {
             this.render_data = []
             this.list_show = false
@@ -245,6 +311,9 @@
             }
           }
 
+          .add-many-select-button {
+            margin-right: 6.8px;
+          }
           a {
             text-decoration: underline;
             cursor: pointer;

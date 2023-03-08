@@ -179,7 +179,7 @@ const router = createRouter({
     console.log('--------------------scrollBehavior-------------------')
 
     // 修正滚动行为
-    let my_scroll_to = position => {
+    function my_scroll_to(position) {
       console.log('滚动位置 开始修正')
       if (!position) return
       let timer = setInterval(() => {
@@ -196,6 +196,7 @@ const router = createRouter({
           NProgress.done()
         }
       }, 8)
+
       setTimeout(() => {
         clearInterval(timer)
         NProgress.done()

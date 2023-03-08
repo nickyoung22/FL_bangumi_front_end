@@ -15,7 +15,6 @@
             <div class="small-img-wrapper" :class="{ now: i === img_info.index_now }">
               <img
                 class="hover-active click-active"
-                loading="lazy"
                 @click="clickPrev(i)"
                 draggable="false"
                 :data-index="i"
@@ -554,6 +553,7 @@
             .small-img-wrapper {
               height: 330px;
               width: auto;
+              min-width: 60px;
               padding-left: 3px;
               padding-right: 3px;
               border: 1px solid rgba(4, 238, 255, 0.712);

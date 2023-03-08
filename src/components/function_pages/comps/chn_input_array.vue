@@ -55,6 +55,7 @@
         handler() {
           this.$emit('update:modelValue', this.my_array)
         },
+        // 选项式api watch 默认是浅层的
         deep: true
       }
     },

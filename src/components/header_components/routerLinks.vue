@@ -32,11 +32,7 @@
 
           <template v-else>
             {{ $route.meta.name }}
-            {{
-              $route.params.operation
-                ? ' -> 操作：' + ($route.params.operation === 'add' ? '添加' : '修改')
-                : ''
-            }}
+            {{ operationName }}
           </template>
         </div>
       </div>
@@ -65,6 +61,23 @@
 
       routeNow() {
         return this.$route.path
+      },
+
+      operationName() {
+        let operation = this.$route.params.operation
+        if (operation) {
+          if (operation === 'add') {
+            return ' -> 操作：' + '添加'
+          }
+          if (operation === 'modify') {
+            return ' -> 操作：' + '修改'
+          }
+          if (operation === 'addMany') {
+            return ' -> 操作：' + '添加多项'
+          }
+        } else {
+          return ''
+        }
       },
 
       is_main_page() {

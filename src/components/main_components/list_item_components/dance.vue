@@ -69,13 +69,7 @@
             ">
             <template v-if="/youtube\.com/.test(file.content)">
               <div class="embed-video-box">
-                <iframe
-                  :src="`https://www.youtube.com/embed/${
-                    file.content.match(/watch\?v=([-\w]+)/)[1]
-                  }`"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen></iframe>
+                <Youtube_player :id="file.content.match(/watch\?v=([-\w]+)/)[1]"></Youtube_player>
               </div>
             </template>
 
@@ -140,6 +134,8 @@
   import File_icon from '@/components/small_components/file_icon.vue'
   import NProgress from 'nprogress'
 
+  import Youtube_player from '@/components/small_components/youtube_player.vue'
+
   export default {
     setup() {
       const store = useStore()
@@ -147,7 +143,8 @@
     },
 
     components: {
-      File_icon
+      File_icon,
+      Youtube_player
     },
 
     props: ['list_item_data'],
@@ -280,13 +277,8 @@
         .embed-video-box {
           display: inline-block;
           height: 260px;
-          width: 452px;
           margin-left: 5px;
           border: 1px solid #25edff82;
-          iframe {
-            width: 100%;
-            height: 100%;
-          }
         }
       }
 

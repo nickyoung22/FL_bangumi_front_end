@@ -1,5 +1,6 @@
 <template>
   <div class="list-item" :class="{ selected: isSelected }">
+    <!-- 标题行 -->
     <div class="title-box clearfix">
       <span
         class="name float-left click-active hover-active"
@@ -14,10 +15,13 @@
         </span>
       </template>
     </div>
+    <!-- tag标签行 -->
     <div class="tags-box tags_highlight">
       {{ list_item_data.tags.join(' ') }}
     </div>
+    <!-- 预览信息 + 右侧小图标 -->
     <div class="prev-box-wrapper">
+      <!-- 预览信息 -->
       <div class="prev-box">
         <template v-for="hot_item in list_item_data.hots">
           <template
@@ -59,37 +63,17 @@
         <template v-for="file in list_item_data.file_names">
           <template
             v-if="
-              file.type === 'file' &&
-              /.url$/.test(file.name) &&
-              (/youtube\.com/.test(file.content) || /bilibili\.com/.test(file.content))
+              file.type === 'file' && /.url$/.test(file.name) && /youtube\.com/.test(file.content)
             ">
             <template v-if="/youtube\.com/.test(file.content)">
-              <div class="embed-video-box">
-                <iframe
-                  :src="`https://www.youtube.com/embed/${file.content.match(/watch\?v=(\w+)/)[1]}`"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen></iframe>
+              <div class="embed-video-box float-left">
+                <Youtube_player :id="file.content.match(/watch\?v=([-\w]+)/)[1]"></Youtube_player>
               </div>
             </template>
-
-            <!-- b站内嵌代码不能调节音量等 故不用 -->
-            <!-- <template v-if="/bilibili\.com/.test(file.content)">
-                <div class="embed-video-box">
-                  <iframe
-                    :src="`//player.bilibili.com/player.html?bvid=${
-                      file.content.match(/video\/(BV\w+)/)[1]
-                    }&danmaku=0`"
-                    scrolling="no"
-                    border="0"
-                    frameborder="no"
-                    framespacing="0"
-                    allowfullscreen="true"></iframe>
-                </div>
-              </template> -->
           </template>
         </template>
       </div>
+      <!-- 小图标 -->
       <div class="info-box">
         <div class="filenames-box-wrapper clearfix">
           <div class="filenames-box float-right">
@@ -130,6 +114,7 @@
 
   import File_icon from '@/components/small_components/file_icon.vue'
   import NProgress from 'nprogress'
+  import Youtube_player from '@/components/small_components/youtube_player.vue'
 
   export default {
     setup() {
@@ -138,7 +123,8 @@
     },
 
     components: {
-      File_icon
+      File_icon,
+      Youtube_player
     },
 
     props: ['list_item_data'],
@@ -272,13 +258,8 @@
         .embed-video-box {
           display: inline-block;
           height: 260px;
-          width: 452px;
           margin-left: 5px;
           border: 1px solid #25edff82;
-          iframe {
-            width: 100%;
-            height: 100%;
-          }
         }
       }
 
@@ -289,10 +270,7 @@
 
         .filenames-box-wrapper {
           .filenames-box {
-            height: 100px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
+            height: 150px;
             writing-mode: vertical-lr;
             margin: 5px;
             font-size: calc(var(--body-font-size) * 1);

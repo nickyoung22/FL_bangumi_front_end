@@ -25,6 +25,9 @@
 </template>
 
 <script>
+  // 【Vue 移动端企业级实战 - 长列表虚拟滚动高阶插件封装】 https://www.bilibili.com/video/BV1ab4y127Hp
+  // 长列表优化之虚拟列表 - 爱搞事的程序鱼的文章 - 知乎 https://zhuanlan.zhihu.com/p/444778554
+
   import _throttle from '@/utils/_throttle.js'
   import { useStore } from '@/stores/store.js'
 
@@ -84,6 +87,7 @@
         },
         // 这里不深度监听
         // 因为对单个数据项的修改，例如modify data后，应保持页面不变，即渲染内容不变。
+        // 选项式api watch 默认是浅层的
         deep: false
       }
     },
