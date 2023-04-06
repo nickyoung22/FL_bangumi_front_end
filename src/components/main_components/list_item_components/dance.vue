@@ -96,12 +96,16 @@
             <!-- 展示除了 .vmd .wav 的文件 -->
             <template v-for="file in list_item_data.file_names">
               <div v-if="!(/\.vmd$/.test(file.name) || /\.wav$/.test(file.name))">
-                <File_icon
-                  @click="open(list_item_data.type, list_item_data.storeName, file.name)"
-                  class="file-names click-active hover-active"
-                  v-bind="{
-                    file_obj: file
-                  }"></File_icon>
+                <!-- 不展示 hots文件夹图标 -->
+                <template v-if="file.name === 'hots' && file.type === 'folder'"></template>
+                <template v-else>
+                  <File_icon
+                    @click="open(list_item_data.type, list_item_data.storeName, file.name)"
+                    class="file-names click-active hover-active"
+                    v-bind="{
+                      file_obj: file
+                    }"></File_icon>
+                </template>
               </div>
             </template>
 
@@ -263,6 +267,7 @@
 
         img,
         video {
+          float: left;
           display: inline-block;
           height: 260px;
           vertical-align: top;
@@ -275,6 +280,7 @@
         }
 
         .embed-video-box {
+          float: left;
           display: inline-block;
           height: 260px;
           margin-left: 5px;

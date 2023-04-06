@@ -1,7 +1,9 @@
 <template>
   <div class="list-item">
     <div class="title-box clearfix">
-      <span class="name float-left">
+      <span
+        class="name float-left click-active hover-active"
+        @click="open(list_item_data.type, list_item_data.storeName)">
         {{ list_item_data.name }}
       </span>
 
@@ -12,8 +14,8 @@
         </span>
       </template>
 
-      <span v-if="list_item_data.actress" class="actress actress_highlight float-right">
-        {{ list_item_data.actress.join(' -- ') }}
+      <span class="original original_highlight float-right">
+        {{ list_item_data.original.join(' - ') }}
       </span>
     </div>
     <div class="tags-box tags_highlight">
@@ -21,105 +23,47 @@
     </div>
     <div class="prev-box-wrapper">
       <div class="prev-box">
-        <!-- hots -->
-
-        <div class="hots">
-          <template v-for="hot_item in list_item_data.hots">
-            <template
-              v-if="
-                hot_item.includes('.mp4') || hot_item.includes('.MP4') || hot_item.includes('.mkv')
-              ">
-              <video
-                class="hover-active"
-                controls
-                controlsList="nodownload"
-                disablePictureInPicture="true">
-                <source
-                  v-bind:src="
-                    store.api_server +
-                    '/static/' +
-                    list_item_data.type +
-                    '/' +
-                    encodeURIComponent(list_item_data.storeName + '/hots/' + hot_item)
-                  " />
-                您的浏览器不支持 video 标签。
-              </video>
-            </template>
-            <template
-              v-if="
-                hot_item.includes('.jpg') || hot_item.includes('.jpeg') || hot_item.includes('.png')
-              ">
-              <img
-                class="hover-active"
-                v-bind:src="
-                  store.api_server +
-                  '/static/' +
-                  list_item_data.type +
-                  '/' +
-                  encodeURIComponent(list_item_data.storeName + '/hots/' + hot_item)
-                " />
-            </template>
-          </template>
-        </div>
-        <!-- <hr /> -->
-
-        <!-- files -->
-        <template v-for="file_item in list_item_data.file_names">
+        <!-- youtube bilibili内嵌视频 -->
+        <template v-for="file in list_item_data.file_names">
           <template
             v-if="
-              file_item.name.includes('.mp4') ||
-              file_item.name.includes('.MP4') ||
-              file_item.name.includes('.mkv')
+              file.type === 'file' &&
+              /.url$/.test(file.name) &&
+              (/youtube\.com\/watch\?v=/.test(file.content) || /bilibili\.com/.test(file.content))
             ">
-            <video
-              class="hover-active"
-              controls
-              controlsList="nodownload"
-              disablePictureInPicture="true">
-              <source
-                v-bind:src="
-                  store.api_server +
-                  '/static/' +
-                  list_item_data.type +
-                  '/' +
-                  encodeURIComponent(list_item_data.storeName + '/' + file_item.name)
-                " />
-              您的浏览器不支持 video 标签。
-            </video>
-          </template>
-          <template
-            v-if="
-              file_item.name.includes('.jpg') ||
-              file_item.name.includes('.jpeg') ||
-              file_item.name.includes('.png')
-            ">
-            <img
-              class="hover-active"
-              v-bind:src="
-                store.api_server +
-                '/static/' +
-                list_item_data.type +
-                '/' +
-                encodeURIComponent(list_item_data.storeName + '/' + file_item.name)
-              " />
+            <template v-if="/youtube\.com/.test(file.content)">
+              <div class="embed-video-box">
+                <Youtube_player :id="file.content.match(/watch\?v=([-\w]+)/)[1]"></Youtube_player>
+              </div>
+            </template>
+
+            <!-- b站内嵌代码不能调节音量等 故不用 -->
+            <!-- <template v-if="/bilibili\.com/.test(file.content)">
+                <div class="embed-video-box">
+                  <iframe
+                    :src="`//player.bilibili.com/player.html?bvid=${
+                      file.content.match(/video\/(BV\w+)/)[1]
+                    }&danmaku=0`"
+                    scrolling="no"
+                    border="0"
+                    frameborder="no"
+                    framespacing="0"
+                    allowfullscreen="true"></iframe>
+                </div>
+              </template> -->
           </template>
         </template>
       </div>
       <div class="info-box">
         <div class="filenames-box-wrapper clearfix">
           <div class="filenames-box float-right">
-            <!-- files-icons -->
             <template v-for="file in list_item_data.file_names">
-              <!-- 不展示 hots文件夹图标 -->
-              <template v-if="file.name === 'hots' && file.type === 'folder'"></template>
-              <template v-else>
-                <File_icon
-                  @click="open(list_item_data.type, list_item_data.storeName, file.name)"
-                  class="file-names click-active hover-active"
-                  v-bind="{
-                    file_obj: file
-                  }"></File_icon>
-              </template>
+              <File_icon
+                @click="open(list_item_data.type, list_item_data.storeName, file.name)"
+                class="file-names click-active hover-active"
+                v-bind="{
+                  file_obj: file
+                }"></File_icon>
             </template>
 
             <File_icon
@@ -134,7 +78,7 @@
           </div>
         </div>
 
-        <div class="buttons-box">
+        <div class="buttons-box" @selectstart.prevent>
           <el-button type="warning" @click="modify(list_item_data)">修改信息</el-button>
         </div>
       </div>
@@ -144,8 +88,11 @@
 
 <script>
   import { useStore } from '@/stores/store.js'
+
   import File_icon from '@/components/small_components/file_icon.vue'
-  import IMG_LOAD_ERROR from '@/assets/myPictures/other/图片加载失败.png'
+  import NProgress from 'nprogress'
+
+  import Youtube_player from '@/components/small_components/youtube_player.vue'
 
   export default {
     setup() {
@@ -154,17 +101,20 @@
     },
 
     components: {
-      File_icon
+      File_icon,
+      Youtube_player
     },
 
     props: ['list_item_data'],
 
     data() {
       return {
-        ComponentName: 'main.vue  infinite_list.vue  anime_movie.vue',
-        IMG_LOAD_ERROR
+        ComponentName: 'main.vue  infinite_list.vue  character_2cy.vue'
       }
     },
+
+    computed: {},
+
     methods: {
       open(type, ...path_arr) {
         console.log(path_arr)
@@ -175,7 +125,6 @@
           }
         })
       },
-
       modify(item_data) {
         // // 这里要深拷贝。因为不想详情页数据和列表页项数据产生联系
         // this.store.temp_data.modify_data = JSON.parse(JSON.stringify(item_data))
@@ -185,26 +134,19 @@
           name: 'Add_Resources_detail',
           params: { type: item_data.type, storeName: item_data.storeName, operation: 'modify' }
         })
-      },
-
-      handle_cover_img_error(e) {
-        let temp_img = new Image()
-        temp_img.src = e.target.src.replace('.jpg', '.png')
-        temp_img.addEventListener('load', () => {
-          // console.log('加载成功了！！！！！！！！')
-          e.target.src = temp_img.src
-        })
-        temp_img.addEventListener('error', () => {
-          // console.log('加载失败了！！！！！！！！')
-          e.target.src = IMG_LOAD_ERROR
-        })
       }
-    }
+    },
+
+    created() {},
+    mounted() {}
   }
 </script>
 
 <style scoped lang="less">
   .list-item {
+    &.selected {
+      background-color: #ffee006a !important;
+    }
     .title-box {
       .name,
       .other-name {
@@ -233,20 +175,21 @@
         img,
         video {
           display: inline-block;
-          height: 220px;
+          height: 260px;
           vertical-align: top;
           margin-left: 5px;
-          border: 2.8px solid #ff00ff;
+          border: 1px solid #d400ff;
 
-          cursor: pointer;
+          &:hover {
+            cursor: pointer;
+          }
         }
 
-        .hots {
-          display: inline;
-          img,
-          video {
-            border: 2.6px solid #ff8400;
-          }
+        .embed-video-box {
+          display: inline-block;
+          height: 260px;
+          margin-left: 5px;
+          border: 1px solid #ff00ff;
         }
       }
 
@@ -265,6 +208,13 @@
             margin: 5px;
             font-size: calc(var(--body-font-size) * 1);
 
+            .img-info {
+              writing-mode: lr;
+              color: var(--info-font-color);
+              font-weight: 660;
+              font-size: calc(var(--body-font-size) * 0.6);
+            }
+
             :deep(.file-names) {
               height: calc(var(--body-font-size) * 1.68);
               width: calc(var(--body-font-size) * 1.68);
@@ -281,7 +231,9 @@
         }
 
         .buttons-box {
-          height: 36px;
+          .select-box {
+            margin-bottom: 10px;
+          }
           margin: 5px;
           text-align: right;
         }
@@ -289,7 +241,6 @@
     }
   }
 
-  // video 样式设置
   .prev-box {
     /* 播放按钮  进度条  全屏按钮 */
     video::-webkit-media-controls-play-button,

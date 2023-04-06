@@ -183,6 +183,7 @@
 
     .left {
       /* flex: 1; */
+      margin-left: 5px;
       margin-right: calc(var(--right-sider-width) + 10px);
     }
 

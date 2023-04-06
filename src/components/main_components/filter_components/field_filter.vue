@@ -389,14 +389,15 @@
           }
 
           .top {
+            height: 220px;
             img {
-              height: 90px;
+              height: 100%;
               border-radius: 3px;
               cursor: pointer;
             }
 
             .icons-box {
-              height: 90px;
+              height: 100%;
               display: flex;
               flex-direction: row;
               flex-wrap: wrap;
